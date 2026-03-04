@@ -1,0 +1,224 @@
+/* ================= HERO ================= */
+
+.hero {
+  position: relative;
+  height: 70vh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.hero-img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(21, 21, 21, 0.6), rgba(49, 48, 48, 0.6));
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  color: rgb(249, 245, 245);
+  max-width: 900px;
+  padding: 20px;
+}
+
+.hero-content h1 {
+  font-size: 55px;
+  font-weight: bold;
+}
+
+.hero-content p {
+  margin: 15px 0;
+  font-size: 27px;
+  opacity: 0.9;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* ================= QUICK ACTION ================= */
+
+.quick-section {
+  margin-top: -60px;
+  position: relative;
+  z-index: 5;
+  padding: 20px;
+}
+
+.quick-grid {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.quick-card {
+  padding: 25px;
+  border-radius: 15px;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.quick-card:hover {
+  transform: scale(1.05);
+}
+
+.saffron {
+  background: linear-gradient(135deg, #ff9933, #ff6600);
+}
+
+.gold {
+  background: linear-gradient(135deg, #d4af37, #b8860b);
+}
+
+.quick-icon {
+  width: 28px;
+  height: 28px;
+  margin: auto;
+}
+
+/* ================= ABOUT ================= */
+
+.about-section {
+  text-align: center;
+  padding: 80px 20px;
+  /* background-color: #5e3709; */
+}
+
+.about-section h2 {
+  font-size: 40px;
+  margin-bottom: 15px;
+  /* color: #f39f4a; */
+}
+
+/* ================= CROWD ================= */
+
+.crowd-section {
+  text-align: center;
+  background: #f9f7f5;
+  padding: 60px 20px;
+}
+
+
+
+.crowd-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  padding: 15px 25px;
+  border-radius: 50px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.pulse-dot {
+  width: 12px;
+  height: 12px;
+  background: green;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ================= EVENTS ================= */
+
+.events-section {
+  padding: 80px 20px;
+}
+
+.events-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.view-all {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #ff6600;
+  font-weight: 600;
+}
+
+.events-grid {
+  max-width: 1200px;
+  margin: 30px auto 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.event-card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.event-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.event-content {
+  padding: 20px;
+}
+
+.event-date {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: gray;
+}
+
+.event-content h3 {
+  margin: 10px 0;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+
+  .hero-content h1 {
+    font-size: 28px;
+  }
+
+  .quick-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .events-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,87 @@
+/* ===== Container ===== */
+.visit-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 40px 20px;
+}
+
+/* ===== Title ===== */
+.visit-title {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.visit-subtitle {
+  font-size: 14px;
+  color: gray;
+  margin-bottom: 25px;
+}
+
+/* ===== Form Card ===== */
+.visit-form {
+  background: white;
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ===== Form Group ===== */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #ff6600;
+}
+
+/* ===== Button ===== */
+.visit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #ff9933, #ff6600);
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.visit-btn:hover {
+  opacity: 0.9;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 500px) {
+  .visit-container {
+    padding: 20px;
+  }
+
+  .visit-form {
+    padding: 18px;
+  }
+}

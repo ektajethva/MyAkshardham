@@ -1,0 +1,98 @@
+/* ===== Container ===== */
+.shop-container {
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* ===== Title ===== */
+.shop-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.shop-subtitle {
+  color: gray;
+  margin-bottom: 40px;
+}
+
+/* ===== Grid ===== */
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+}
+
+/* ===== Card ===== */
+.shop-card {
+  background: white;
+  border-radius: 18px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  transition: 0.3s ease;
+}
+
+.shop-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+/* ===== Image ===== */
+.shop-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+/* ===== Product Name ===== */
+.shop-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+/* ===== Price ===== */
+.shop-price {
+  color: #ff6600;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* ===== Button ===== */
+.shop-btn {
+  background: linear-gradient(135deg, #ff9933, #ff6600);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  width: 100%;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: 0.3s;
+}
+
+.shop-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+
+  .shop-container {
+    padding: 40px 15px;
+  }
+
+  .shop-image {
+    height: 130px;
+  }
+
+}

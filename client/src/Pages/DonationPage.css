@@ -1,0 +1,213 @@
+/* ===== CONTAINER ===== */
+.donation-container {
+  max-width: 700px;
+  margin: auto;
+  padding: 40px 20px;
+}
+
+/* ===== HEADER ===== */
+.donation-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.icon-box {
+  background: #fff3e6;
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  color: #ff6600;
+}
+
+.donation-header h1 {
+  font-size: 28px;
+  margin-top: 15px;
+}
+
+.donation-header p {
+  color: gray;
+  font-size: 14px;
+}
+
+/* ===== PROGRESS CARD ===== */
+.progress-card {
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  margin-bottom: 25px;
+}
+
+.progress-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 12px;
+  background: #eee;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff9933, #ff6600);
+  transition: width 0.4s ease;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.raised {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff6600;
+}
+
+.goal {
+  font-weight: bold;
+}
+
+/* ===== DONOR TEXT ===== */
+.donor-count {
+  margin-top: 10px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: green;
+}
+
+/* ===== FORM ===== */
+.donation-form {
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+/* ===== AMOUNT BUTTONS ===== */
+.amount-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.amount-btn {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  background: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.amount-btn.active {
+  background: #ff6600;
+  color: white;
+  border-color: #ff6600;
+}
+
+/* ===== INPUT ===== */
+.input-wrapper {
+  position: relative;
+  margin-top: 8px;
+}
+
+.input-wrapper svg {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: gray;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 10px 10px 10px 35px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* ===== DIVIDER ===== */
+.divider {
+  text-align: center;
+  margin: 25px 0;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* ===== FORM GROUP ===== */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.grid-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* ===== BUTTON ===== */
+.donate-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(90deg, #ff9933, #ff6600);
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.donate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== NOTE ===== */
+.note {
+  font-size: 12px;
+  text-align: center;
+  margin-top: 15px;
+  color: gray;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .amount-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-two {
+    grid-template-columns: 1fr;
+  }
+}

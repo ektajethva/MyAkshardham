@@ -1,0 +1,149 @@
+/* ===== Section ===== */
+.map-section {
+  padding: 70px 20px;
+  background-color: #f9f9f9;
+}
+
+/* ===== Container ===== */
+.map-container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* ===== Header ===== */
+.map-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.map-header h2 {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.map-header p {
+  color: #666;
+  font-size: 15px;
+  max-width: 600px;
+  margin: auto;
+}
+
+/* ===== Grid Layout ===== */
+.map-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 35px;
+  align-items: stretch;   /* IMPORTANT for equal height */
+}
+
+/* ===== Map Frame ===== */
+.map-frame {
+  height: 420px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.map-frame:hover {
+  transform: scale(1.01);
+}
+
+.map-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ===== Info Section ===== */
+.map-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;   /* IMPORTANT */
+}
+
+/* ===== Info Card ===== */
+.info-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease;
+
+  flex: 1;   /* Makes 3 cards equal height */
+}
+
+.info-card:hover {
+  transform: translateY(-4px);
+}
+
+.info-card h4 {
+  margin-top: 4px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.info-card p {
+  font-size: 14px;
+  color: #555;
+  margin: 3px 0;
+  line-height: 1.5;
+}
+
+/* ===== Icon ===== */
+.info-icon {
+  background-color: #ff7a00;
+  color: white;
+  padding: 8px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+/* ===========================
+   RESPONSIVE DESIGN
+=========================== */
+
+/* ===== Tablet ===== */
+@media (max-width: 992px) {
+  .map-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .map-frame {
+    height: 350px;
+  }
+
+  .map-info {
+    height: auto;
+  }
+
+  .info-card {
+    flex: none;
+  }
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 768px) {
+
+  .map-section {
+    padding: 50px 15px;
+  }
+
+  .map-header h2 {
+    font-size: 24px;
+  }
+
+  .map-frame {
+    height: 280px;
+  }
+
+  .info-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

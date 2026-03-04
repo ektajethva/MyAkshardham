@@ -1,0 +1,150 @@
+/* ===== FOOTER MAIN ===== */
+.footer {
+  background-color: #111;
+  color: #fff;
+  padding: 60px 20px 20px; /* slightly increased top spacing */
+}
+
+/* ===== CONTAINER ===== */
+.footer-container {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+.footer-section {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== BRAND (2 IMAGES) ===== */
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+/* First Logo */
+.footer-logo {
+  height: 75px;   /* reduced for better balance */
+  width: auto;
+  object-fit: contain;
+}
+
+/* Second Logo */
+.footer-logo-second {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* ===== DESCRIPTION TEXT ===== */
+.footer-text {
+  font-size: 14px;
+  color: #f3943c;
+  line-height: 1.6;
+  max-width: 320px;  /* prevents text stretching */
+}
+
+/* ===== HEADINGS ===== */
+.footer-heading {
+  font-weight: 600;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+/* ===== LINKS ===== */
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-links a {
+  color: #ccc;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #ff7a00;
+  padding-left: 4px; /* subtle hover animation */
+}
+
+/* ===== CONTACT ===== */
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* ===== BOTTOM ===== */
+.footer-bottom {
+  margin-top: 50px;
+  padding-top: 15px;
+  border-top: 1px solid #333;
+  text-align: center;
+  font-size: 13px;
+  color: #aaa;
+}
+
+/* ===========================
+   RESPONSIVE DESIGN
+=========================== */
+
+/* ===== TABLET ===== */
+@media (max-width: 992px) {
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+
+  .footer-text {
+    max-width: 100%;
+  }
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .footer-brand {
+    justify-content: center;
+  }
+
+  .footer-section {
+    text-align: center;
+    align-items: center;
+  }
+
+  .contact-item {
+    justify-content: center;
+  }
+
+  .footer-text {
+    max-width: 100%;
+  }
+
+  .footer-logo {
+    height: 65px;
+  }
+
+  .footer-logo-second {
+    height: 35px;
+  }
+}
