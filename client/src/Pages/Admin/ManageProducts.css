@@ -1,0 +1,119 @@
+.products-container{
+  padding:40px;
+  background:#f5f7fb;
+  min-height:100vh;
+}
+
+/* header */
+
+.products-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.products-header h1{
+  font-size:26px;
+}
+
+.add-btn{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:#ff7a00;
+  color:white;
+  border:none;
+  padding:8px 14px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+/* form card */
+
+.product-form-card{
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  margin-bottom:25px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+}
+
+.product-form-card h2{
+  margin-bottom:15px;
+}
+
+.product-form{
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  gap:15px;
+}
+
+.form-group{
+  display:flex;
+  flex-direction:column;
+}
+
+.form-group label{
+  font-size:14px;
+  margin-bottom:5px;
+}
+
+.form-group input{
+  padding:8px;
+  border:1px solid #ccc;
+  border-radius:6px;
+}
+
+.submit-btn{
+  background:#ff7a00;
+  color:white;
+  border:none;
+  padding:10px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+/* products list */
+
+.products-list{
+  background:white;
+  border-radius:10px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+}
+
+.product-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 20px;
+  border-bottom:1px solid #eee;
+}
+
+.product-name{
+  font-weight:600;
+}
+
+.product-price{
+  font-size:14px;
+  color:#ff7a00;
+  font-weight:600;
+}
+
+.product-actions{
+  display:flex;
+  gap:8px;
+}
+
+.edit-btn,
+.delete-btn{
+  border:1px solid #ddd;
+  background:white;
+  padding:6px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.delete-btn{
+  color:red;
+}

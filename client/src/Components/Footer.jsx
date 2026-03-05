@@ -1,7 +1,7 @@
 import { MapPin, Phone, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "../assets/Logo1.png";
-import temple from "../assets/Logo2.png";
+import temple from "../assets/Logo3.png";
 import "./Footer.css";
 
 function Footer() {

@@ -19,6 +19,13 @@ import ParkingPage from "./Pages/ParkingPage";
 import MyOrdersPage from "./Pages/MyOrdersPage";
 import BookingConfirmation from "./Pages/BookingConfirmation";
 import CartPage from "./Pages/CartPage";
+import AdminDashboard from "./Pages/Admin/AdminDashboard";
+import ManageCrowd from "./Pages/Admin/ManageCrowd";
+import ManageDonations from "./Pages/Admin/ManageDonations";
+import ManageEvents from "./Pages/Admin/ManageEvents";
+import ManageProducts from "./Pages/Admin/ManageProducts";
+import ViewBookings from "./Pages/Admin/ViewBookings";
+import ViewOrders from "./Pages/Admin/ViewOrders";
 
 function App() {
   const isLoggedIn = localStorage.getItem("isLoggedIn");
@@ -108,6 +115,48 @@ function App() {
           path="/cart"
           element={
             isLoggedIn ? <CartPage /> : <Navigate to="/cart" />
+          }
+        />
+        <Route
+          path="/Admin-dashboard"
+          element={
+            isLoggedIn ? <AdminDashboard /> : <Navigate to="/Admin-dashboard" />
+          }
+        />
+        <Route
+          path="/managecrowd"
+          element={
+            isLoggedIn ? <ManageCrowd /> : <Navigate to="/managecrowd" />
+          }
+        />
+        <Route
+          path="/managedonation"
+          element={
+            isLoggedIn ? <ManageDonations /> : <Navigate to="/managedonation" />
+          }
+        />
+        <Route
+          path="/manage-events"
+          element={
+            isLoggedIn ? <ManageEvents /> : <Navigate to="/manage-events" />
+          }
+        />
+        <Route
+          path="/manage-products"
+          element={
+            isLoggedIn ? <ManageProducts /> : <Navigate to="/manage-products" />
+          }
+        />
+        <Route
+          path="/view-booking"
+          element={
+            isLoggedIn ? <ViewBookings /> : <Navigate to="/view-booking" />
+          }
+        />
+        <Route
+          path="/view-Orders"
+          element={
+            isLoggedIn ? <ViewOrders /> : <Navigate to="/view-orders" />
           }
         />
         
