@@ -1,8 +1,9 @@
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { Clock, Calendar } from "lucide-react";
-import event1 from "@/assets/event-1.jpg";
-import event2 from "@/assets/event-2.jpg";
+import event1 from "../assets/event-1.jpg";
+import event2 from "../assets/event-2.jpg";
 import { Link } from "react-router-dom";
+import { Button } from "../components/ui/button";
 
 const events = [
   {

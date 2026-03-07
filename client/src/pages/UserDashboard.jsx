@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Calendar, Flame, Car, MapPin, Ticket, ShoppingCart } from "lucide-react";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 
 const stats = [
   { label: "Temple Visits", value: "3", icon: MapPin },

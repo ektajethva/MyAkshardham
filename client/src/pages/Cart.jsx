@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
+import { Button } from "../components/ui/button";
 
 const cartItems = [
   { id: 1, name: "Tulsi Mala", price: 250, qty: 2 },

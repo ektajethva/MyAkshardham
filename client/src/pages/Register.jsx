@@ -9,9 +9,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "../components/ui/select";
 import { Flame, Eye, EyeOff } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "../hooks/use-toast";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -193,6 +193,7 @@ export default function RegisterPage() {
 
           </div>
         </section>
+ 
       </main>
     </div>
   );
