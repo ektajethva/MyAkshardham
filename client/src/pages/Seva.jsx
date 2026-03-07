@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Flame } from "lucide-react";
+import { Label } from "../components/ui/label";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
 
 const sevaTypes = [
   "Maha Aarti",
@@ -69,7 +69,7 @@ export default function SevaPage() {
         </div>
 
         <Button className="w-full" size="lg">
-          <Flame className="h-4 w-4 mr-2" />
+          <Flame className="h-4 w-4 mr-2" />    
           Book Seva
         </Button>
 

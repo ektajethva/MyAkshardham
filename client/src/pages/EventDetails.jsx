@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
 import { Calendar, Clock, ArrowLeft } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import event1 from "@/assets/event-1.jpg";
+import event1 from "../assets/event-1.jpg";
+import { Button } from "../components/ui/button";
 
 export default function EventDetailsPage() {
   const { id } = useParams();

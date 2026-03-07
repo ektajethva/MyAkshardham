@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
+import { Button } from "../components/ui/button";
 
 const products = [
   { id: 1, name: "Tulsi Mala", price: 250, image: "🪷" },
