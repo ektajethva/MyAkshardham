@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Users, CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar } from "../components/ui/calendar";
 import { format } from "date-fns";
 
 const crowdData = {

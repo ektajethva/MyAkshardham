@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import { Calendar, Flame, Car, Users, Clock, ArrowRight } from "lucide-react";
-import templeHero from "@/assets/temple-hero.jpg";
-import event1 from "@/assets/event-1.jpg";
-import event2 from "@/assets/event-2.jpg";
-import MapSection from "@/components/MapSection";
+import templeHero from "../assets/temple-hero.jpg";
+import event1 from "../assets/event-1.jpg";
+import event2 from "../assets/event-2.jpg";
+import MapSection from "../components/MapSection";
 
 const quickActions = [
   { label: "Book Visit", icon: Calendar, path: "/book-visit", color: "gradient-saffron" },

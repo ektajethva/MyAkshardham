@@ -1,38 +1,27 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "./components/ui/toaster";
+import { Toaster as Sonner } from "./components/ui/sonner";
+import { TooltipProvider } from "./components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import LoginPage from "./pages/Login";
+import HomePage from "./pages/Index";
+import RegisterPage from "./pages/Register";
 import UserLayout from "./components/UserLayout";
-import AdminLayout from "./components/AdminLayout";
-
-import Index from "./pages/Index";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
 import UserDashboard from "./pages/UserDashboard";
-import BookVisit from "./pages/BookVisit";
+import BookVisitPage from "./pages/BookVisit";
 import BookingConfirmation from "./pages/BookingConfirmation";
-import Events from "./pages/Events";
-import EventDetails from "./pages/EventDetails";
-import Seva from "./pages/Seva";
-import Shop from "./pages/Shop";
-import Cart from "./pages/Cart";
-import MyOrders from "./pages/MyOrders";
-import TourGuide from "./pages/TourGuide";
-import Parking from "./pages/Parking";
-import CrowdStatus from "./pages/CrowdStatus";
-import Donation from "./pages/Donation";
+import EventsPage from "./pages/Events";
+import EventDetailsPage from "./pages/EventDetails";
+import SevaPage from "./pages/Seva";
+import ShopPage from "./pages/Shop";
+import CartPage from "./pages/Cart";
+import MyOrdersPage from "./pages/MyOrders";
+import TourGuidePage from "./pages/TourGuidePage";
+import ParkingPage from "./pages/Parking";
+import CrowdStatusPage from "./pages/CrowdStatus";
+import DonationPage from "./pages/Donation";
 
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import ManageEvents from "./pages/admin/ManageEvents";
-import ManageProducts from "./pages/admin/ManageProducts";
-import ViewBookings from "./pages/admin/ViewBookings";
-import ManageCrowd from "./pages/admin/ManageCrowd";
-import ViewOrders from "./pages/admin/ViewOrders";
-import ManageDonations from "./pages/admin/ManageDonations";
 
-import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -42,28 +31,28 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        
           <Routes>
             {/* Public routes */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
 
             {/* User routes */}
             <Route element={<UserLayout />}>
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<HomePage />} />
               <Route path="/dashboard" element={<UserDashboard />} />
-              <Route path="/book-visit" element={<BookVisit />} />
+              <Route path="/book-visit" element={<BookVisitPage />} />
               <Route path="/booking-confirmation" element={<BookingConfirmation />} />
-              <Route path="/events" element={<Events />} />
-              <Route path="/events/:id" element={<EventDetails />} />
-              <Route path="/seva" element={<Seva />} />
-              <Route path="/shop" element={<Shop />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/orders" element={<MyOrders />} />
-              <Route path="/tour-guide" element={<TourGuide />} />
-              <Route path="/parking" element={<Parking />} />
-              <Route path="/crowd-status" element={<CrowdStatus />} />
-              <Route path="/donation" element={<Donation />} />
+              <Route path="/events" element={<EventsPage />} />
+              <Route path="/events/:id" element={<EventDetailsPage />} />
+              <Route path="/seva" element={<SevaPage />} />
+              <Route path="/shop" element={<ShopPage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/orders" element={<MyOrdersPage />} />
+              <Route path="/tour-guide" element={<TourGuidePage />} />
+              <Route path="/parking" element={<ParkingPage />} />
+              <Route path="/crowd-status" element={<CrowdStatusPage />} />
+              <Route path="/donation" element={<DonationPage />} />
             </Route>
 
             {/* Admin routes */}
@@ -79,7 +68,7 @@ const App = () => {
 
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
+
       </TooltipProvider>
     </QueryClientProvider>
   );

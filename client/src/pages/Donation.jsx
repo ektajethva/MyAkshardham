@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Heart, IndianRupee, CheckCircle2, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
+import { Label } from "../components/ui/label";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
 
 const presetAmounts = [101, 251, 501, 1001, 2501, 5001];
 const goalAmount = 500000;
