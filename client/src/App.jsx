@@ -20,6 +20,15 @@ import TourGuidePage from "./pages/TourGuidePage";
 import ParkingPage from "./pages/Parking";
 import CrowdStatusPage from "./pages/CrowdStatus";
 import DonationPage from "./pages/Donation";
+import AdminLayout from "./components/AdminLayout";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+import ManageEvents from "./pages/Admin/ManageEvents";
+import ManageProducts from "./pages/Admin/ManageProducts";
+import ViewBookings from "./pages/Admin/ViewBookings";
+import ManageCrowd from "./pages/Admin/ManageCrowd";
+import ViewOrders from "./pages/Admin/ViewOrders";
+import ManageDonations from "./pages/Admin/ManageDonations";
+import NotFound from "./pages/NotFound";
 
 
 

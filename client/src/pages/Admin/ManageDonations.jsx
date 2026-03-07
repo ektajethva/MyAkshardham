@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Heart, IndianRupee, TrendingUp, Users, Search, Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
+import { Progress } from "../../components/ui/progress";
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
 
 const stats = [
   { label: "Total Collected", value: "₹3,27,500", icon: IndianRupee, change: "+18%", color: "text-primary" },
