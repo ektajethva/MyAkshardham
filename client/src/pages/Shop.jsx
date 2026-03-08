@@ -1,5 +1,7 @@
-import { ShoppingCart } from "lucide-react";
 import { Button } from "../components/ui/button";
+import { ShoppingCart, Check } from "lucide-react";
+import { useCart } from "../contexts/CartContext";
+import { useState } from "react";
 
 const products = [
   { id: 1, name: "Tulsi Mala", price: 250, image: "🪷" },
@@ -11,42 +13,55 @@ const products = [
 ];
 
 export default function ShopPage() {
+  const { addToCart } = useCart();
+  const [addedId, setAddedId] = useState(null);
+
+  const handleAdd = (p) => {
+    addToCart(p);
+    setAddedId(p.id);
+    setTimeout(() => setAddedId(null), 1000);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
-
       <h1 className="font-heading text-2xl font-bold text-foreground mb-2">
         Temple Shop
       </h1>
-
       <p className="text-muted-foreground mb-8">
         Sacred items for your daily worship
       </p>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-        {products.map((product) => (
+        {products.map((p) => (
           <div
-            key={product.id}
+            key={p.id}
             className="bg-card rounded-xl shadow-card hover:shadow-card-hover transition-shadow p-5 text-center"
           >
-            <div className="text-5xl mb-4">{product.image}</div>
+            <div className="text-5xl mb-4">{p.image}</div>
 
-            <h3 className="font-semibold text-foreground mb-1">
-              {product.name}
-            </h3>
+            <h3 className="font-semibold text-foreground mb-1">{p.name}</h3>
 
-            <p className="text-primary font-bold mb-4">
-              ₹{product.price}
-            </p>
+            <p className="text-primary font-bold mb-4">₹{p.price}</p>
 
-            <Button size="sm" variant="outline" className="w-full">
-              <ShoppingCart className="h-4 w-4 mr-1" />
-              Add to Cart
+            <Button
+              size="sm"
+              variant={addedId === p.id ? "default" : "outline"}
+              className="w-full"
+              onClick={() => handleAdd(p)}
+            >
+              {addedId === p.id ? (
+                <>
+                  <Check className="h-4 w-4 mr-1" /> Added
+                </>
+              ) : (
+                <>
+                  <ShoppingCart className="h-4 w-4 mr-1" /> Add to Cart
+                </>
+              )}
             </Button>
-
           </div>
         ))}
       </div>
-
     </div>
   );
 }

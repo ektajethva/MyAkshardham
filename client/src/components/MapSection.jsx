@@ -17,7 +17,7 @@ export default function MapSection() {
         <div className="md:col-span-2 rounded-2xl overflow-hidden shadow-card border border-border h-80 md:h-96">
           <iframe
             title="Akshardham Temple Location"
-            src="https://www.openstreetmap.org/export/embed.html?bbox=72.6550%2C23.2050%2C72.6750%2C23.2150&layer=mapnik&marker=23.2100%2C72.6650"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3718.0306861234726!2d72.795130173884!3d21.270252879443003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be04baaa311317d%3A0xe52667cc15af4c58!2sSwaminarayan%20Akshardham!5e0!3m2!1sen!2sin!4v1772897717139!5m2!1sen!2sin"
             className="w-full h-full border-0"
             loading="lazy"
           ></iframe>
@@ -35,7 +35,7 @@ export default function MapSection() {
                   Address
                 </h4>
                 <p className="text-muted-foreground text-sm leading-relaxed">
-                  Akshardham Road, Sector 20, Gandhinagar, Gujarat 382421
+                  Olpad Road, Kanad Akshardham, Surat, Gujrat. 395004
                 </p>
               </div>
             </div>

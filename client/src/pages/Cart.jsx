@@ -1,29 +1,87 @@
-import { Trash2 } from "lucide-react";
 import { Button } from "../components/ui/button";
-
-const cartItems = [
-  { id: 1, name: "Tulsi Mala", price: 250, qty: 2 },
-  { id: 2, name: "Brass Diya Set", price: 499, qty: 1 },
-];
+import { Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
+import { useCart } from "../contexts/CartContext";
+import { Link } from "react-router-dom";
 
 export default function CartPage() {
-  const total = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
+  const { items, removeFromCart, updateQty, totalPrice } = useCart();
+
+  if (items.length === 0) {
+    return (
+      <div className="container mx-auto px-4 py-16 text-center max-w-lg">
+        <ShoppingBag className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+
+        <h1 className="font-heading text-2xl font-bold text-foreground mb-2">
+          Your Cart is Empty
+        </h1>
+
+        <p className="text-muted-foreground mb-6">
+          Browse the shop to add items
+        </p>
+
+        <Link to="/shop">
+          <Button>Go to Shop</Button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-lg">
-      <h1 className="font-heading text-2xl font-bold text-foreground mb-6">Your Cart</h1>
+      <h1 className="font-heading text-2xl font-bold text-foreground mb-6">
+        Your Cart
+      </h1>
 
-      {cartItems.map((item) => (
-        <div key={item.id} className="flex items-center justify-between bg-card rounded-xl shadow-card p-4 mb-3">
-          <div>
-            <h3 className="font-semibold text-foreground">{item.name}</h3>
-            <p className="text-sm text-muted-foreground">
-              Qty: {item.qty} × ₹{item.price}
-            </p>
-          </div>
+      {items.map((item) => (
+        <div
+          key={item.id}
+          className="flex items-center justify-between bg-card rounded-xl shadow-card p-4 mb-3"
+        >
           <div className="flex items-center gap-3">
-            <span className="font-bold text-foreground">₹{item.price * item.qty}</span>
-            <button className="text-destructive hover:opacity-70">
+            <span className="text-3xl">{item.image}</span>
+
+            <div>
+              <h3 className="font-semibold text-foreground">
+                {item.name}
+              </h3>
+
+              <p className="text-sm text-muted-foreground">
+                ₹{item.price} each
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 border border-border rounded-md">
+              
+              <button
+                className="p-1 hover:bg-secondary rounded-l-md"
+                onClick={() => updateQty(item.id, item.qty - 1)}
+              >
+                <Minus className="h-3 w-3" />
+              </button>
+
+              <span className="px-2 text-sm font-medium">
+                {item.qty}
+              </span>
+
+              <button
+                className="p-1 hover:bg-secondary rounded-r-md"
+                onClick={() => updateQty(item.id, item.qty + 1)}
+              >
+                <Plus className="h-3 w-3" />
+              </button>
+
+            </div>
+
+            <span className="font-bold text-foreground w-16 text-right">
+              ₹{item.price * item.qty}
+            </span>
+
+            <button
+              className="text-destructive hover:opacity-70"
+              onClick={() => removeFromCart(item.id)}
+            >
               <Trash2 className="h-4 w-4" />
             </button>
           </div>
@@ -31,11 +89,18 @@ export default function CartPage() {
       ))}
 
       <div className="flex justify-between items-center mt-6 mb-4 px-1">
-        <span className="font-heading font-semibold text-lg text-foreground">Total</span>
-        <span className="font-bold text-xl text-primary">₹{total}</span>
+        <span className="font-heading font-semibold text-lg text-foreground">
+          Total
+        </span>
+
+        <span className="font-bold text-xl text-primary">
+          ₹{totalPrice}
+        </span>
       </div>
 
-      <Button className="w-full" size="lg">Proceed to Checkout</Button>
+      <Button className="w-full" size="lg">
+        Proceed to Checkout
+      </Button>
     </div>
   );
 }
