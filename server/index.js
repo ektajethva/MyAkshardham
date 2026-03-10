@@ -10,6 +10,8 @@ app.get("/",(req,res)=>{
     res.send("Backend is running");
 })
 
+app.use("/auth",require("./routes/authRoutes"))
+
 app.listen(5000,()=>{
     console.log('Server running on 5000')
 })

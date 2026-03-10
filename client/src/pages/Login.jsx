@@ -1,3 +1,6 @@
+
+import axios from "axios";
+import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
@@ -16,21 +19,50 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!role) {
-      toast({ title: "Please select a role", variant: "destructive" });
-      return;
-    }
-    setIsLoading(true);
-    // Simulate login — no backend
-    setTimeout(() => {
-      setIsLoading(false);
-      toast({ title: "Welcome back!" });
-      navigate(role === "admin" ? "/admin" : "/dashboard");
-    }, 600);
-  };
+const handleSubmit = async (e) => {
 
+  e.preventDefault();
+
+  if (!role) {
+    toast({ title: "Please select a role", variant: "destructive" });
+    return;
+  }
+
+  setIsLoading(true);
+
+  try {
+
+    const res = await axios.post("http://localhost:5000/auth/login", {
+      email,
+      password,
+      role
+    });
+
+    toast({ title: "Login successful" });
+
+    if (role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/");
+    }
+
+  } catch (err) {
+
+    toast({
+      title: err.response?.data?.error || "Login failed",
+      variant: "destructive"
+    });
+
+  }
+
+  setIsLoading(false);
+};
+
+  const handleGoogleLogin = () => {
+    // Redirect user to backend for Google OAuth
+    window.location.href = "http://localhost:5000/auth/google";
+};
+  
   return (
     <div className="relative min-h-screen overflow-hidden bg-background">
       {/* Decorative elements */}
@@ -109,6 +141,24 @@ export default function LoginPage() {
               >
                 {isLoading ? "Signing in..." : "Sign In"}
               </Button>
+              {/* Divider */}
+              <div className="flex items-center gap-3 my-3">
+                <hr className="flex-1 border-t" />
+                <span className="text-sm text-muted-foreground">or</span>
+                <hr className="flex-1 border-t" />
+              </div>
+
+              {/* Google Login */}
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full flex items-center justify-center gap-2 hover:bg-gray-100"
+                onClick={handleGoogleLogin}
+              >
+                <FcGoogle size={20} />
+                Continue with Google
+              </Button>
+
             </form>
 
             <div className="mt-6 text-center">
