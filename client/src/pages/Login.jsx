@@ -86,6 +86,20 @@ const handleSubmit = async (e) => {
           {/* Card */}
           <div className="rounded-2xl border border-border bg-card p-8 shadow-card">
             <form className="space-y-5" onSubmit={handleSubmit}>
+              
+              <div>
+                <Label htmlFor="role" className="text-sm font-medium text-foreground">Login As</Label>
+                <Select value={role} onValueChange={setRole}>
+                  <SelectTrigger className="mt-1.5" id="role">
+                    <SelectValue placeholder="Select your role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="user">User</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div>
                 <Label htmlFor="email" className="text-sm font-medium text-foreground">Email</Label>
                 <Input
@@ -118,19 +132,6 @@ const handleSubmit = async (e) => {
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
-              </div>
-
-              <div>
-                <Label htmlFor="role" className="text-sm font-medium text-foreground">Login As</Label>
-                <Select value={role} onValueChange={setRole}>
-                  <SelectTrigger className="mt-1.5" id="role">
-                    <SelectValue placeholder="Select your role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="user">User</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
 
               <Button

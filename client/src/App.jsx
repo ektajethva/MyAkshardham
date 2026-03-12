@@ -17,6 +17,7 @@ import ShopPage from "./pages/Shop";
 import CartPage from "./pages/Cart";
 import MyOrdersPage from "./pages/MyOrders";
 import TourGuidePage from "./pages/TourGuidePage";
+import BookGuide from "./pages/BookGuide";
 import ParkingPage from "./pages/Parking";
 import CrowdStatusPage from "./pages/CrowdStatus";
 import DonationPage from "./pages/Donation";
@@ -59,6 +60,7 @@ const App = () => {
               <Route path="/cart" element={<CartPage />} />
               <Route path="/orders" element={<MyOrdersPage />} />
               <Route path="/tour-guide" element={<TourGuidePage />} />
+                <Route path="/book-guide" element={<BookGuide />} />
               <Route path="/parking" element={<ParkingPage />} />
               <Route path="/crowd-status" element={<CrowdStatusPage />} />
               <Route path="/donation" element={<DonationPage />} />

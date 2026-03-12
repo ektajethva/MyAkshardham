@@ -1,6 +1,7 @@
 import { Card, CardContent } from "../components/ui/card";
 import { Star, Globe, MapPin } from "lucide-react";
 import { Button } from "../components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const guides = [
   {
@@ -38,6 +39,7 @@ const guides = [
 ];
 
 export default function TourGuidePage() {
+   const navigate = useNavigate();
   return (
     <div className="container mx-auto px-4 py-12">
       
@@ -84,10 +86,17 @@ export default function TourGuidePage() {
                 {guide.languages.join(" · ")}
               </div>
 
-              <Button className="w-full" size="sm">
-                <MapPin className="h-4 w-4 mr-1" />
-                Book Now
-              </Button>
+            <Button
+              className="w-full" size="sm" onClick={() =>
+                navigate(
+                  `/book-guide?guide=${encodeURIComponent(guide.name)}&languages=${encodeURIComponent(
+                    guide.languages.join(", ")
+                  )}`
+                )
+              }
+            >
+            <MapPin className="h-4 w-4 mr-1" /> Book Now
+          </Button>
 
             </CardContent>
           </Card>
