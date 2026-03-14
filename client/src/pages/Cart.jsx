@@ -1,10 +1,58 @@
 import { Button } from "../components/ui/button";
 import { Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function CartPage() {
+  const navigate = useNavigate()
   const { items, removeFromCart, updateQty, totalPrice } = useCart();
+
+  const handleCheckout = () => {
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  if (!user) {
+    alert("Please login to continue checkout");
+    navigate("/login");
+    return;
+  }
+
+  const options = {
+    key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+    amount: totalPrice * 100,
+    currency: "INR",
+    name: "MyAkshardham Shop",
+    description: "Shop Order Payment",
+
+    handler: function (response) {
+
+      const receiptData = {
+        paymentId: response.razorpay_payment_id,
+        name: user.name,
+        email: user.email,
+        items: items,
+        total: totalPrice,
+        date: new Date().toLocaleString()
+      };
+
+      localStorage.setItem("receipt", JSON.stringify(receiptData));
+
+      navigate("/receipt");
+    },
+
+    prefill: {
+      name: user.name,
+      email: user.email
+    },
+
+    theme: {
+      color: "#f97316"
+    }
+  };
+
+  const rzp = new window.Razorpay(options);
+  rzp.open();
+};
 
   if (items.length === 0) {
     return (
@@ -38,7 +86,11 @@ export default function CartPage() {
           className="flex items-center justify-between bg-card rounded-xl shadow-card p-4 mb-3"
         >
           <div className="flex items-center gap-3">
-            <span className="text-3xl">{item.image}</span>
+            <img
+              src={item.image}
+              alt={item.name}
+              className="h-12 w-12 rounded-lg object-cover"
+            />
 
             <div>
               <h3 className="font-semibold text-foreground">
@@ -98,7 +150,7 @@ export default function CartPage() {
         </span>
       </div>
 
-      <Button className="w-full" size="lg">
+      <Button className="w-full" size="lg" onClick={handleCheckout}>
         Proceed to Checkout
       </Button>
     </div>

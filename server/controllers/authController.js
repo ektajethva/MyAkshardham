@@ -1,4 +1,5 @@
 const supabase = require("../config/supabaseClient");
+const jwt = require("jsonwebtoken")
 
 // Normal registration (email/password)
 const registerUser = async (req, res) => {
@@ -35,10 +36,24 @@ const loginUser = async (req, res) => {
     return res.status(400).json({ error: "Invalid email or password" });
   }
 
+  const token = jwt.sign(
+    {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      role: role
+    },
+    process.env.JWT_SECRET,
+    {expiresIn:"30d"}
+  )
+
   res.json({
     message: "Login successful",
+    token,
     user: data
   });
+
+
 
 };
 
@@ -56,5 +71,8 @@ const googleLogin = async (req, res) => {
   res.redirect(data.url);
 };
 
-module.exports = { googleLogin, registerUser, loginUser };
+const logout = async ( req, res) =>{
+  res.json({ message: "Logout Succesfully"});
+}
+module.exports = { googleLogin, registerUser, loginUser, logout };
 

@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Flame, ShoppingCart } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { useCart } from "../contexts/CartContext";
+import { supabase } from "../lib/supabaseClient";
 
 const navLinks = [
   // { label: "Home", path: "/" },
@@ -15,9 +16,76 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+
+  const [user, setUser] = useState(null);
+  const [dropdownmenu, setDropdownmenu] = useState(false);
+
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const { totalItems } = useCart();
+
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+
+  const token = params.get("token");
+  const name = params.get("name");
+  const email = params.get("email");
+
+  // Google login via backend redirect
+  if (token) {
+
+    const userData = { name, email, role:"user" };
+
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(userData));
+
+    setUser(userData);
+
+    window.history.replaceState({}, document.title, "/");
+
+  } else {
+
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+
+    // 👇 detect Supabase Google login
+    const checkGoogleUser = async () => {
+      const { data } = await supabase.auth.getUser();
+
+      const user = data.user;
+
+      if (user) {
+        const userData = {
+          name: user.user_metadata.full_name,
+          email: user.email,
+          role:"user"
+        };
+
+        localStorage.setItem("user", JSON.stringify(userData));
+        setUser(userData);
+      }
+    };
+
+    checkGoogleUser();
+  }
+
+}, [location]);
+
+  const handleLogout = async () => {
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    await supabase.auth.signOut();
+
+    setUser(null);
+
+    window.location.href = "/";
+  }
+  
 
   return (
     <nav className="sticky top-0 z-50 bg-card/90 backdrop-blur-md border-b border-border">
@@ -59,12 +127,89 @@ export default function Navbar() {
             </Button>
           </Link>
 
-          {/* LOGIN BUTTON */}
+          {/* LOGIN BUTTON  & User Namer Shown */}
+          {user && user.role !== "admin" ?(
+           <div className="relative ml-3">
+
+    {/* Avatar */}
+    <div
+      onClick={() => setDropdownmenu(!dropdownmenu)}
+      className="h-9 w-9 rounded-full bg-primary text-white flex items-center justify-center font-semibold cursor-pointer hover:shadow-md transition"
+    >
+      {user.name?.charAt(0).toUpperCase()}
+    </div>
+
+    {/* Dropdown */}
+    {dropdownmenu && (
+      <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-xl border border-gray-200">
+
+        {/* Profile Section */}
+        <div className="flex flex-col items-center p-6 border-b">
+
+          <div className="h-16 w-16 rounded-full bg-primary text-white flex items-center justify-center text-xl font-bold mb-2">
+            {user.name?.charAt(0).toUpperCase()}
+          </div>
+
+          <p className="text-sm font-semibold text-gray-900">
+            {user.name}
+          </p>
+
+          <p className="text-xs text-gray-500">
+            {user.email}
+          </p>
+
+        </div>
+
+        {/* Menu Section */}
+        <div className="py-2">
+
+          <Link
+            to="/dashboard"
+            className="block px-6 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          >
+            Dashboard
+          </Link>
+
+          <Link
+            to="/orders"
+            className="block px-6 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          >
+            My Orders
+          </Link>
+
+          <Link
+            to="/settings"
+            className="block px-6 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          >
+            Settings
+          </Link>
+
+        </div>
+
+        {/* Logout Section */}
+        <div className="border-t p-3">
+
+          <button
+            onClick={handleLogout}
+            className="w-full border rounded-full py-2 text-sm hover:bg-gray-100 transition"
+          >
+            Sign out
+          </button>
+
+        </div>
+
+      </div>
+    )}
+
+  </div>
+
+          ): (
           <Link to="/login">
             <Button variant="outline" size="sm" className="ml-1">
               Login
             </Button>
           </Link>
+          )}
         </div>
 
         {/* MOBILE MENU ICON */}

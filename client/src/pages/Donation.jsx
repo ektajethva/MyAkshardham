@@ -9,6 +9,8 @@ const presetAmounts = [101, 251, 501, 1001, 2501, 5001];
 const goalAmount = 500000;
 const collectedAmount = 327500;
 
+
+
 export default function DonationPage() {
   const [selected, setSelected] = useState(501);
   const [custom, setCustom] = useState("");
@@ -18,6 +20,34 @@ export default function DonationPage() {
 
   const amount = custom ? Number(custom) : selected || 0;
   const progress = Math.min((collectedAmount / goalAmount) * 100, 100);
+
+  const handlePayment = async () => {
+
+  const options = {
+    key: import.meta.env.VITE_RAZORPAY_KEY_ID, 
+    amount: amount * 100,
+    currency: "INR",
+    name: "Temple Donation",
+    description: "Donation Payment",
+    
+    handler: function (response) {
+      alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+    },
+
+    prefill: {
+      name: name,
+      email: email,
+      contact: phone
+    },
+
+    theme: {
+      color: "#f97316"
+    }
+  };
+
+  const rzp = new window.Razorpay(options);
+  rzp.open();
+};
 
   return (
     <div className="container mx-auto px-4 py-10 max-w-xl">
@@ -122,7 +152,7 @@ export default function DonationPage() {
         </div>
 
         {/* Pay button */}
-        <Button className="w-full h-12 text-base font-semibold shadow-saffron" size="lg" disabled={!amount || amount <= 0}>
+        <Button className="w-full h-12 text-base font-semibold shadow-saffron" size="lg" disabled={!amount || amount <= 0} onClick={handlePayment}>
           <Heart className="h-5 w-5 mr-2" />
           Donate {amount > 0 ? `₹${amount.toLocaleString("en-IN")}` : ""}
         </Button>

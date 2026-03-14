@@ -21,9 +21,24 @@ const crowdData = {
 };
 
 const levelConfig = {
-  Low: { color: "bg-green-500", bg: "bg-green-50 text-green-700 border-green-200", message: "Best time to visit the temple!", percentage: 25 },
-  Medium: { color: "bg-amber-500", bg: "bg-amber-50 text-amber-700 border-amber-200", message: "Moderate crowd — plan accordingly.", percentage: 55 },
-  High: { color: "bg-red-500", bg: "bg-red-50 text-red-700 border-red-200", message: "Temple is crowded. Consider visiting later.", percentage: 90 },
+  Low: {
+    color: "bg-green-500",
+    bg: "bg-green-50 text-green-700 border-green-200",
+    message: "Best time to visit the temple!",
+    percentage: 25,
+  },
+  Medium: {
+    color: "bg-amber-500",
+    bg: "bg-amber-50 text-amber-700 border-amber-200",
+    message: "Moderate crowd — plan accordingly.",
+    percentage: 55,
+  },
+  High: {
+    color: "bg-red-500",
+    bg: "bg-red-50 text-red-700 border-red-200",
+    message: "Temple is crowded. Consider visiting later.",
+    percentage: 90,
+  },
 };
 
 export default function CrowdStatusPage() {
@@ -35,8 +50,12 @@ export default function CrowdStatusPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
-      <h1 className="font-heading text-2xl font-bold text-foreground mb-1">Live Crowd Status</h1>
-      <p className="text-muted-foreground mb-8">Select a date to check temple occupancy</p>
+      <h1 className="font-heading text-2xl font-bold text-foreground mb-1">
+        Live Crowd Status
+      </h1>
+      <p className="text-muted-foreground mb-8">
+        Select a date to check temple occupancy
+      </p>
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* Calendar */}
@@ -58,7 +77,9 @@ export default function CrowdStatusPage() {
 
           <div>
             <p className="text-xs text-muted-foreground mb-1">Status for</p>
-            <p className="font-semibold text-foreground">{format(date, "MMMM d, yyyy")}</p>
+            <p className="font-semibold text-foreground">
+              {format(date, "MMMM d, yyyy")}
+            </p>
           </div>
 
           {/* Meter */}
@@ -70,13 +91,19 @@ export default function CrowdStatusPage() {
               />
             </div>
             <div className="flex justify-between text-[11px] text-muted-foreground">
-              <span>Low</span><span>Medium</span><span>High</span>
+              <span>Low</span>
+              <span>Medium</span>
+              <span>High</span>
             </div>
           </div>
 
           {/* Badge */}
-          <div className={`inline-flex items-center gap-2 rounded-full border px-5 py-2 text-sm font-semibold ${config.bg}`}>
-            <div className={`h-2.5 w-2.5 rounded-full ${config.color} animate-pulse`} />
+          <div
+            className={`inline-flex items-center gap-2 rounded-full border px-5 py-2 text-sm font-semibold ${config.bg}`}
+          >
+            <div
+              className={`h-2.5 w-2.5 rounded-full ${config.color} animate-pulse`}
+            />
             {level} Crowd
           </div>
 

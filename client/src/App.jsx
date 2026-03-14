@@ -30,6 +30,7 @@ import ViewOrders from "./pages/Admin/ViewOrders";
 import ManageDonations from "./pages/Admin/ManageDonations";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./Pages/Admin/AdminDashboard";
+import ReceiptPage from "./pages/ReceiptPage";
 
 
 
@@ -58,9 +59,10 @@ const App = () => {
               <Route path="/seva" element={<SevaPage />} />
               <Route path="/shop" element={<ShopPage />} />
               <Route path="/cart" element={<CartPage />} />
+              <Route path="/receipt" element={<ReceiptPage />} />
               <Route path="/orders" element={<MyOrdersPage />} />
               <Route path="/tour-guide" element={<TourGuidePage />} />
-                <Route path="/book-guide" element={<BookGuide />} />
+              <Route path="/book-guide" element={<BookGuide />} />
               <Route path="/parking" element={<ParkingPage />} />
               <Route path="/crowd-status" element={<CrowdStatusPage />} />
               <Route path="/donation" element={<DonationPage />} />

@@ -38,6 +38,12 @@ const handleSubmit = async (e) => {
       role
     });
 
+    const { token , user } = res.data;
+    
+    localStorage.setItem("token",token);
+    localStorage.setItem("user",JSON.stringify(user));
+
+    
     toast({ title: "Login successful" });
 
     if (role === "admin") {

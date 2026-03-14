@@ -22,6 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../../components/ui/dialog";
+import axios from "axios";
 
 const emptyForm = {
   name: "",
@@ -40,18 +41,15 @@ export default function ManageProducts() {
   const [submitting, setSubmitting] = useState(false);
 
   const fetchProducts = async () => {
-    const { data, error } = await supabase
-      .from("products")
-      .select("*")
-      .order("created_at", { ascending: false });
+    try{
+      const res = await axios.get("http://localhost:5000/Product/getPro");
 
-    if (error) {
-      toast.error("Failed to load products");
-      return;
+      setProducts(res.data);
+      setLoading(false)
     }
-
-    setProducts(data || []);
-    setLoading(false);
+    catch(error){
+      toast.error("Failed to load Product");
+    }
   };
 
   useEffect(() => {
@@ -66,14 +64,14 @@ export default function ManageProducts() {
 
   const openEdit = (p) => {
     setForm({
-      name: p.name,
+      name: p.product_name,
       description: p.description || "",
       price: String(p.price),
       stock: String(p.stock),
-      image_url: p.image_url || "",
+      image_url: p.image || "",
     });
 
-    setEditingId(p.id);
+    setEditingId(p.product_id);
     setDialogOpen(true);
   };
 
@@ -95,53 +93,51 @@ export default function ManageProducts() {
       image_url: form.image_url,
     };
 
-    if (editingId) {
-      const { error } = await supabase
-        .from("products")
-        .update(payload)
-        .eq("id", editingId);
+    try{
+      if(editingId){
+        await axios.put(
+          `http://localhost:5000/Product/updatePro/${editingId}`,
+          payload
+        )
 
-      if (error) {
-        toast.error("Failed to update product");
-        setSubmitting(false);
-        return;
+        toast.success("Product Updated")
       }
 
-      toast.success("Product updated");
-    } else {
-      const { error } = await supabase
-        .from("products")
-        .insert(payload);
+      else{
+        await axios.post(
+          `http://localhost:5000/Product/addPro`,
+          payload
+        );
 
-      if (error) {
-        toast.error("Failed to add product");
-        setSubmitting(false);
-        return;
+
+        toast.success("Product added");
       }
 
-      toast.success("Product added");
+      setDialogOpen(false)
+      setSubmitting(false)
+      fetchProducts();
     }
-
-    setDialogOpen(false);
-    setSubmitting(false);
-    fetchProducts();
+    catch(error){
+      console.log(error.response?.data || error.message);
+      toast.error("Failed to save Product");
+      setSubmitting(false)
+    }
+  
   };
 
   const handleDelete = async (id) => {
     if (!confirm("Delete this product?")) return;
 
-    const { error } = await supabase
-      .from("products")
-      .delete()
-      .eq("id", id);
+    try{
+      await axios.delete(
+        `http://localhost:5000/Product/deletePro/${id}`
+      );
 
-    if (error) {
+      toast.success("Product deleted");
+      fetchProducts();
+    }catch(error){
       toast.error("Failed to delete");
-      return;
     }
-
-    toast.success("Product deleted");
-    fetchProducts();
   };
 
   return (
@@ -192,12 +188,12 @@ export default function ManageProducts() {
               </TableRow>
             ) : (
               products.map((p) => (
-                <TableRow key={p.id}>
+                <TableRow key={p.product_id}>
                   <TableCell>
-                    {p.image_url ? (
+                    {p.image ? (
                       <img
-                        src={p.image_url}
-                        alt={p.name}
+                        src={p.image}
+                        alt={p.product_name}
                         className="h-12 w-12 rounded-lg object-cover border border-border"
                       />
                     ) : (
@@ -208,7 +204,7 @@ export default function ManageProducts() {
                   </TableCell>
 
                   <TableCell className="font-semibold text-foreground">
-                    {p.name}
+                    {p.product_name}
                   </TableCell>
 
                   <TableCell className="hidden md:table-cell text-muted-foreground text-sm max-w-[200px] truncate">
@@ -245,7 +241,7 @@ export default function ManageProducts() {
                         variant="outline"
                         size="sm"
                         className="text-destructive"
-                        onClick={() => handleDelete(p.id)}
+                        onClick={() => handleDelete(p.product_id)}
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </Button>
