@@ -31,6 +31,7 @@ import ManageDonations from "./pages/Admin/ManageDonations";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./Pages/Admin/AdminDashboard";
 import ReceiptPage from "./pages/ReceiptPage";
+import ManageGuides from "./pages/Admin/ManageGuides";
 
 
 
@@ -77,6 +78,8 @@ const App = () => {
               <Route path="crowd" element={<ManageCrowd />} />
               <Route path="orders" element={<ViewOrders />} />
               <Route path="donations" element={<ManageDonations />} />
+              <Route path="guides" element={<ManageGuides />} />
+
             </Route>
 
             <Route path="*" element={<NotFound />} />

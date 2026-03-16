@@ -1,5 +1,6 @@
 import { Flame, MapPin, Phone, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
+import Logo2 from "../assets/logo2.png"; // <-- import your logo from assets
 
 export default function Footer() {
   return (
@@ -10,8 +11,12 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <Flame className="h-6 w-6 text-primary" />
-              <span className="font-heading text-lg font-bold">MyAkshardham</span>
+              {/* <Flame className="h-6 w-6 text-primary" /> */}
+              <img
+                src={Logo2}        // logo image
+                alt="Akshardham Logo" 
+                className="h-12 w-35"
+              />
             </div>
             <p className="text-sm opacity-70 leading-relaxed">
               A divine destination for spiritual growth, devotion, and community service in the Swaminarayan tradition.
@@ -53,7 +58,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-background/20 mt-8 pt-6 text-center text-sm opacity-50">
-          © 2026 MyAkshardham. All rights reserved.
+          © 2026 Akshardham. All rights reserved.
         </div>
       </div>
     </footer>

@@ -26,8 +26,8 @@ export default function HomePage() {
         <img src={templeHero} alt="Akshardham Temple" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 gradient-hero" />
         <div className="relative z-10 text-center px-4 max-w-3xl animate-fade-in">
-          <h1 className="font-heading text-4xl md:text-6xl font-bold text-primary-foreground mb-4 drop-shadow-lg">
-            Welcome to MyAkshardham
+          <h1 className="font-heading text-4xl md:text-6xl font-bold text-primary-foreground mb- drop-shadow-lg">
+            Welcome to Akshardham
           </h1>
           <p className="text-primary-foreground/90 text-lg md:text-xl mb-8 font-light">
             Experience divine peace, devotion, and community at the Swaminarayan Temple

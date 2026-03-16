@@ -4,6 +4,7 @@ import { Menu, X, Flame, ShoppingCart } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { useCart } from "../contexts/CartContext";
 import { supabase } from "../lib/supabaseClient";
+import Logo3 from "../assets/logo3.png"; 
 
 const navLinks = [
   // { label: "Home", path: "/" },
@@ -93,10 +94,11 @@ useEffect(() => {
 
         {/* LOGO */}
         <Link to="/" className="flex items-center gap-2">
-          <Flame className="h-7 w-7 text-primary" />
-          <span className="font-heading text-xl font-bold text-foreground">
-            My<span className="text-primary">Akshardham</span>
-          </span>
+          {/* <Flame className="h-7 w-7 text-primary" /> */}
+          <img
+            src={Logo3} 
+            className="h-8 w-auto"
+          />
         </Link>
 
         {/* DESKTOP MENU */}

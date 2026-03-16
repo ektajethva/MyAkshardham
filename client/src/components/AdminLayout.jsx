@@ -22,6 +22,7 @@ const adminLinks = [
   { label: "Crowd Status", path: "/admin/crowd", icon: Users },
   { label: "Orders", path: "/admin/orders", icon: ShoppingCart },
   { label: "Donations", path: "/admin/donations", icon: BarChart3 },
+  { label: "Tour Guides", path: "/admin/guides", icon: Users },
 ];
 
 export default function AdminLayout() {
