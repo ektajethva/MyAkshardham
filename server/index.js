@@ -19,6 +19,7 @@ app.get("/",(req,res)=>{
 
 app.use("/auth",require("./routes/authRoutes"))
 app.use("/Product",require("./routes/productRoute"))
+app.use("/Guide",require("./routes/tourGuideRoutes"))
 
 app.listen(5000,()=>{
     console.log('Server running on 5000')

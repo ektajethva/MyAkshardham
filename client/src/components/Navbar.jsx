@@ -84,7 +84,7 @@ useEffect(() => {
 
     setUser(null);
 
-    window.location.href = "/";
+    window.location.href = "/login";
   }
   
 

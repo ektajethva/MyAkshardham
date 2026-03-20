@@ -4,9 +4,8 @@ import { Label } from "../../components/ui/label";
 import { Textarea } from "../../components/ui/textarea";
 import { Plus, Pencil, Trash2, X, Star, Globe } from "lucide-react";
 import { useState, useEffect } from "react";
-// import { supabase } from "../../../integrations/supabase/client";
 import { toast } from "../../hooks/use-toast";
-
+import axios from "axios";
 const emptyForm = {
   name: "",
   photo_url: "",
@@ -21,20 +20,47 @@ export default function ManageGuides() {
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const fetchGuides = async () => {
-    const { data } = await supabase
-      .from("guides")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    setGuides(data || []);
-    setLoading(false);
+    try {
+      const res = await fetch("http://localhost:5000/Guide/getGuides");
+      const data = await res.json();
+        
+      setGuides(data);
+      setLoading(false);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load guides. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   useEffect(() => {
     fetchGuides();
   }, []);
+
+  const openAdd = () => {
+    setForm(emptyForm);
+    setEditingId(null);
+    setShowForm(true);
+  };
+
+  const openEdit = (p) => {
+    setForm({
+      name: p.name,
+      photo_url: p.photo || "",
+      bio: p.bio || "",
+      languages: p.languages || "",
+      rating: String(p.rating || 4.5),
+    });
+
+    setEditingId(p.id || p.guide_id);
+    setShowForm(true);
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,66 +82,53 @@ export default function ManageGuides() {
       rating: parseFloat(form.rating) || 4.5,
     };
 
-    if (editingId) {
-      const { error } = await supabase
-        .from("guides")
-        .update(payload)
-        .eq("id", editingId);
-
-      if (error) {
-        toast({
-          title: "Failed to update guide",
-          description: error.message,
-          variant: "destructive",
-        });
-      } else {
+    try {
+      if (editingId) {
+        await axios.put(
+          `http://localhost:5000/Guide/updateGuide/${editingId}`,
+           payload
+        );
+       
         toast({ title: "Guide updated successfully" });
-      }
-    } else {
-      const { error } = await supabase.from("guides").insert(payload);
-
-      if (error) {
-        toast({
-          title: "Failed to add guide",
-          description: error.message,
-          variant: "destructive",
-        });
-      } else {
+      } 
+      else {
+        await axios.post(
+          "http://localhost:5000/Guide/addGuide",
+           payload
+        );
         toast({ title: "Guide added successfully" });
-      }
+      }    
+        setForm(emptyForm);
+        setEditingId(null);
+        setShowForm(false);
+        fetchGuides();
     }
-
-    setForm(emptyForm);
-    setEditingId(null);
-    setShowForm(false);
-    fetchGuides();
-  };
-
-  const handleEdit = (g) => {
-    setForm({
-      name: g.name,
-      photo_url: g.photo_url || "",
-      bio: g.bio || "",
-      languages: g.languages || "",
-      rating: String(g.rating || 4.5),
-    });
-
-    setEditingId(g.id);
-    setShowForm(true);
+    catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save guide. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleDelete = async (id) => {
-    const { error } = await supabase.from("guides").delete().eq("id", id);
-
-    if (error) {
+    if (!confirm("Are you sure you want to delete this guide?")) {
+      return;
+    }
+    try {
+      await axios.delete(`http://localhost:5000/Guide/deleteGuide/${id}`);
+      toast({ title: "Guide deleted successfully" });
+      fetchGuides();
+    }
+    catch (error) {
+      console.log(error);
+      
       toast({
-        title: "Failed to delete guide",
-        description: error.message,
+        title: "Error",
+        description: "Failed to delete guide. Please try again.",
         variant: "destructive",
       });
-    } else {
-      toast({ title: "Guide deleted" });
-      fetchGuides();
     }
   };
 
@@ -245,13 +258,14 @@ export default function ManageGuides() {
       ) : (
         <div className="bg-card rounded-xl shadow-card divide-y divide-border">
           {guides.map((g) => (
+            console.log(g),
             <div
-              key={g.id}
+              key={g.id || g.guide_id}
               className="flex items-start justify-between p-4 gap-4"
             >
-              {g.photo_url && (
+              {g.photo && (
                 <img
-                  src={g.photo_url}
+                  src={g.photo}
                   alt={g.name}
                   className="w-14 h-14 rounded-full object-cover shrink-0"
                 />
@@ -285,7 +299,7 @@ export default function ManageGuides() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleEdit(g)}
+                  onClick={() => openEdit(g)}
                 >
                   <Pencil className="h-3.5 w-3.5" />
                 </Button>
@@ -294,7 +308,7 @@ export default function ManageGuides() {
                   variant="outline"
                   size="sm"
                   className="text-destructive"
-                  onClick={() => handleDelete(g.id)}
+                  onClick={() => handleDelete(g.guide_id)}
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </Button>
