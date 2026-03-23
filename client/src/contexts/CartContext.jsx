@@ -1,10 +1,51 @@
-import { createContext, useContext, useState } from "react";
+import { useEffect, createContext, useContext, useState } from "react";
 
-const CartContext = createContext(null);
+const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState([]);
 
+  const [items, setItems] = useState([]);
+  const [user, setUser] = useState(null);
+
+  // ✅ Load user first
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    setUser(storedUser);
+  }, []);
+
+  // ✅ Load cart AFTER user is set
+  useEffect(() => {
+    if (user === null) return;
+
+    const key = user ? `cart_${user.user_id}` : "cart_guest";
+    const savedCart = localStorage.getItem(key);
+
+    setItems(savedCart ? JSON.parse(savedCart) : []);
+  }, [user]);
+
+  // ✅ Save cart per user
+  useEffect(() => {
+    if (user === null) return;
+
+    const key = user ? `cart_${user.user_id}` : "cart_guest";
+    localStorage.setItem(key, JSON.stringify(items));
+  }, [items, user]);
+
+  // 🔁 Listen for login/logout
+  useEffect(() => {
+    const handleUserChange = () => {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      setUser(storedUser);
+    };
+
+    window.addEventListener("userChanged", handleUserChange);
+
+    return () => {
+      window.removeEventListener("userChanged", handleUserChange);
+    };
+  }, []);
+
+  // ➕ Add item
   const addToCart = (product) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.id === product.id);
@@ -19,10 +60,12 @@ export function CartProvider({ children }) {
     });
   };
 
+  // ❌ Remove
   const removeFromCart = (id) => {
     setItems((prev) => prev.filter((i) => i.id !== id));
   };
 
+  // 🔄 Update qty
   const updateQty = (id, qty) => {
     if (qty <= 0) {
       removeFromCart(id);
@@ -31,12 +74,17 @@ export function CartProvider({ children }) {
 
     setItems((prev) =>
       prev.map((i) =>
-        i.id === id ? { ...i, qty: qty } : i
+        i.id === id ? { ...i, qty } : i
       )
     );
   };
 
+  // 🧹 Clear cart
   const clearCart = () => {
+    if (!user) return;
+
+    const key = `cart_${user.user_id}`;
+    localStorage.removeItem(key);
     setItems([]);
   };
 

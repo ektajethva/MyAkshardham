@@ -2,6 +2,7 @@ import { Button } from "../components/ui/button";
 import { Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function CartPage() {
   const navigate = useNavigate()
@@ -24,20 +25,56 @@ export default function CartPage() {
     name: "MyAkshardham Shop",
     description: "Shop Order Payment",
 
-    handler: function (response) {
+    handler: async function (response) {
+      try {
+          const user = JSON.parse(localStorage.getItem("user"));
 
-      const receiptData = {
-        paymentId: response.razorpay_payment_id,
-        name: user.name,
-        email: user.email,
-        items: items,
-        total: totalPrice,
-        date: new Date().toLocaleString()
-      };
+          // ✅ Step 1: Save main payment
+          const paymentRes = await axios.post(
+            "http://localhost:5000/payment/add_Product_Payment",
+            {
+              total_amount: totalPrice,
+              payment_method: "Razorpay",
+              payment_status: "success",
+              payment_date: new Date().toISOString(),
+              user_id: user.user_id,
+              razorpay_payment_id: response.razorpay_payment_id
+            }
+          );
 
-      localStorage.setItem("receipt", JSON.stringify(receiptData));
+          const payment_id = paymentRes.data.payment.id; // 👈 important
 
-      navigate("/receipt");
+          // ✅ Step 2: Save items
+          const itemsPayload = items.map((item) => ({
+            payment_id: payment_id,
+            product_id: item.id,
+            quantity: item.qty,
+            price: item.price
+          }));
+
+          await axios.post(
+            "http://localhost:5000/payment/add_Product_Items",
+            itemsPayload
+          );
+
+          // ✅ Step 3: Save receipt (optional)
+          const receiptData = {
+            paymentId: response.razorpay_payment_id,
+            name: user.name,
+            email: user.email,
+            items: items,
+            total: totalPrice,
+            date: new Date().toLocaleString()
+          };
+
+          localStorage.setItem("receipt", JSON.stringify(receiptData));
+
+          navigate("/receipt");
+
+        } catch (error) {
+          console.log("Payment save error:", error);
+          alert("Payment done but failed to store order");
+        }
     },
 
     prefill: {

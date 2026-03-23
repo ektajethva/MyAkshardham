@@ -2,44 +2,64 @@ import { Card, CardContent } from "../components/ui/card";
 import { Star, Globe, MapPin } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+import { useEffect } from "react";
 
-const guides = [
-  {
-    name: "Pandit Ramesh Sharma",
-    photo:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
-    bio: "Expert in Swaminarayan history with 15+ years of guiding experience at major temples across Gujarat.",
-    languages: ["Hindi", "English", "Gujarati"],
-    rating: 4.9,
-  },
-  {
-    name: "Meera Patel",
-    photo:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face",
-    bio: "Passionate storyteller who brings temple architecture and spiritual significance to life for visitors.",
-    languages: ["English", "Gujarati"],
-    rating: 4.8,
-  },
-  {
-    name: "Arjun Desai",
-    photo:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face",
-    bio: "Multilingual guide specializing in cultural heritage tours and family-friendly experiences.",
-    languages: ["Hindi", "English", "Marathi", "Gujarati"],
-    rating: 4.7,
-  },
-  {
-    name: "Kavita Joshi",
-    photo:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face",
-    bio: "Certified heritage guide with deep knowledge of Vedic art, sculptures, and temple rituals.",
-    languages: ["Hindi", "English"],
-    rating: 4.9,
-  },
-];
+// const guides = [
+//   {
+//     name: "Pandit Ramesh Sharma",
+//     photo:
+//       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+//     bio: "Expert in Swaminarayan history with 15+ years of guiding experience at major temples across Gujarat.",
+//     languages: ["Hindi", "English", "Gujarati"],
+//     rating: 4.9,
+//   },
+//   {
+//     name: "Meera Patel",
+//     photo:
+//       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face",
+//     bio: "Passionate storyteller who brings temple architecture and spiritual significance to life for visitors.",
+//     languages: ["English", "Gujarati"],
+//     rating: 4.8,
+//   },
+//   {
+//     name: "Arjun Desai",
+//     photo:
+//       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face",
+//     bio: "Multilingual guide specializing in cultural heritage tours and family-friendly experiences.",
+//     languages: ["Hindi", "English", "Marathi", "Gujarati"],
+//     rating: 4.7,
+//   },
+//   {
+//     name: "Kavita Joshi",
+//     photo:
+//       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face",
+//     bio: "Certified heritage guide with deep knowledge of Vedic art, sculptures, and temple rituals.",
+//     languages: ["Hindi", "English"],
+//     rating: 4.9,
+//   },
+// ];
 
 export default function TourGuidePage() {
-   const navigate = useNavigate();
+
+    const [guides, setGuides] = useState([]);
+    const navigate = useNavigate();
+
+    const fetchGuides = async () => {
+      try{
+        const res = await axios.get("http://localhost:5000/Guide/getGuides");
+        setGuides(res.data)
+      }catch{
+        console.log("Failed to load Product ",error);
+      }
+    }
+
+    useEffect(() => {
+      fetchGuides();
+    }, [])
+    
+   
   return (
     <div className="container mx-auto px-4 py-12">
       
@@ -57,7 +77,7 @@ export default function TourGuidePage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {guides.map((guide) => (
           <Card
-            key={guide.name}
+            key={guide.guide_id}
             className="group hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 overflow-hidden"
           >
             <CardContent className="p-6 flex flex-col items-center text-center">
@@ -83,15 +103,19 @@ export default function TourGuidePage() {
 
               <div className="flex items-center gap-1 text-xs text-muted-foreground mb-5 flex-wrap justify-center">
                 <Globe className="h-3.5 w-3.5 mr-1" />
-                {guide.languages.join(" · ")}
+                {Array.isArray(guide.languages)
+                  ? guide.languages.join(" · ")
+                  : guide.languages}
               </div>
 
             <Button
               className="w-full" size="sm" onClick={() =>
                 navigate(
                   `/book-guide?guide=${encodeURIComponent(guide.name)}&languages=${encodeURIComponent(
-                    guide.languages.join(", ")
-                  )}`
+                    Array.isArray(guide.languages)
+                        ? guide.languages.join(", ")
+                        : guide.languages
+                  )}&id=${guide.guide_id}`
                 )
               }
             >

@@ -20,6 +20,10 @@ app.get("/",(req,res)=>{
 app.use("/auth",require("./routes/authRoutes"))
 app.use("/Product",require("./routes/productRoute"))
 app.use("/Guide",require("./routes/tourGuideRoutes"))
+app.use("/booking",require("./routes/bookingRoute"))
+app.use("/payment",require("./routes/paymentRoute"))
+app.use("/user",require("./routes/userstatsRoute"))
+
 
 app.listen(5000,()=>{
     console.log('Server running on 5000')

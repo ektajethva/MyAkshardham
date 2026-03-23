@@ -2,6 +2,7 @@ const supabase = require("../config/supabaseClient");
 const jwt = require("jsonwebtoken")
 
 // Normal registration (email/password)
+
 const registerUser = async (req, res) => {
   const { firstName, lastName, email, password,phone } = req.body;
 
@@ -38,7 +39,7 @@ const loginUser = async (req, res) => {
 
   const token = jwt.sign(
     {
-      id: data.id,
+      id: data.user_id,
       name: data.name,
       email: data.email,
       role: role
@@ -71,8 +72,46 @@ const googleLogin = async (req, res) => {
   res.redirect(data.url);
 };
 
+const saveUser = async (req, res) => {
+  try {
+    const { user_id, name, email, role } = req.body;
+
+    // console.log("Incoming:", req.body);
+
+    const { data: existing } = await supabase
+      .from("users")
+      .select("user_id")
+      .eq("user_id", user_id)
+      .maybeSingle();
+
+    if (!existing) {
+      const { data, error } = await supabase
+        .from("users")
+        .insert({
+          user_id,
+          name,
+          email,
+          role
+        });
+
+      if (error) {
+        console.log("❌ INSERT ERROR:", error);
+        return res.status(400).json({ error: error.message });
+      }
+
+      console.log("✅ INSERT SUCCESS:", data);
+    }
+
+    res.json({ message: "User saved" });
+
+  } catch (err) {
+    console.log("🔥 SERVER ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 const logout = async ( req, res) =>{
   res.json({ message: "Logout Succesfully"});
 }
-module.exports = { googleLogin, registerUser, loginUser, logout };
+module.exports = { googleLogin, registerUser, loginUser, logout , saveUser };
 

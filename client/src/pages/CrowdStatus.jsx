@@ -1,24 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Users, CalendarIcon } from "lucide-react";
 import { Calendar } from "../components/ui/calendar";
 import { format } from "date-fns";
+import axios from "axios";
+import { toast } from "../hooks/use-toast";
 
-const crowdData = {
-  "2026-03-01": "Low",
-  "2026-03-02": "Medium",
-  "2026-03-03": "High",
-  "2026-03-04": "Low",
-  "2026-03-05": "Medium",
-  "2026-03-06": "High",
-  "2026-03-07": "Low",
-  "2026-03-08": "Medium",
-  "2026-03-09": "Low",
-  "2026-03-10": "High",
-  "2026-03-14": "Medium",
-  "2026-03-15": "High",
-  "2026-03-20": "Low",
-  "2026-03-25": "Medium",
-};
+// const crowdData = {
+//   "2026-03-01": "Low",
+//   "2026-03-02": "Medium",
+//   "2026-03-03": "High",
+//   "2026-03-04": "Low",
+//   "2026-03-05": "Medium",
+//   "2026-03-06": "High",
+//   "2026-03-07": "Low",
+//   "2026-03-08": "Medium",
+//   "2026-03-09": "Low",
+//   "2026-03-10": "High",
+//   "2026-03-14": "Medium",
+//   "2026-03-15": "High",
+//   "2026-03-20": "Low",
+//   "2026-03-25": "Medium",
+// };
 
 const levelConfig = {
   Low: {
@@ -43,10 +45,30 @@ const levelConfig = {
 
 export default function CrowdStatusPage() {
   const [date, setDate] = useState(new Date());
+  const [crowdlevel, setCrowdlevel] = useState("Low")
+  const [totalCount, setTotalCount] = useState(0)
 
-  const key = format(date, "yyyy-MM-dd");
-  const level = crowdData[key] || "Low";
-  const config = levelConfig[level];
+  useEffect(() => {
+    const fetchCrowd = async () => {
+      try{
+        const formattedDate = format(date, "yyyy-MM-dd");
+
+        const res = await axios.get(`http://localhost:5000/user/crowd/${formattedDate}`)
+
+        setCrowdlevel(res.data.level);
+        setTotalCount(res.data.total);
+      }catch (err) {
+        console.log("Error fetching crowd", err);
+      }
+    }
+
+    fetchCrowd();
+  }, [date])
+  
+
+  // const key = format(date, "yyyy-MM-dd");
+  // const level = crowdData[key] || "Low";
+  const config = levelConfig[crowdlevel];
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
@@ -80,6 +102,10 @@ export default function CrowdStatusPage() {
             <p className="font-semibold text-foreground">
               {format(date, "MMMM d, yyyy")}
             </p>
+
+            <p className="text-sm text-muted-foreground">
+              Total Visitors: {totalCount}
+            </p>
           </div>
 
           {/* Meter */}
@@ -104,7 +130,7 @@ export default function CrowdStatusPage() {
             <div
               className={`h-2.5 w-2.5 rounded-full ${config.color} animate-pulse`}
             />
-            {level} Crowd
+            {crowdlevel} Crowd
           </div>
 
           <p className="text-muted-foreground text-sm">{config.message}</p>

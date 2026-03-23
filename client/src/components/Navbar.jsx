@@ -5,6 +5,7 @@ import { Button } from "../components/ui/button";
 import { useCart } from "../contexts/CartContext";
 import { supabase } from "../lib/supabaseClient";
 import Logo3 from "../assets/logo3.png"; 
+import axios from "axios";
 
 const navLinks = [
   // { label: "Home", path: "/" },
@@ -25,64 +26,119 @@ export default function Navbar() {
   const location = useLocation();
   const { totalItems } = useCart();
 
-useEffect(() => {
-  const params = new URLSearchParams(window.location.search);
+// useEffect(() => {
+//   const params = new URLSearchParams(window.location.search);
 
-  const token = params.get("token");
-  const name = params.get("name");
-  const email = params.get("email");
+//   const user_id = params.get("id");
+//   const token = params.get("token");
+//   const name = params.get("name");
+//   const email = params.get("email");
 
-  // Google login via backend redirect
-  if (token) {
+//   // Google login via backend redirect
+//   if (token) {
 
-    const userData = { name, email, role:"user" };
+//     const userData = { user_id:user_id , name, email, role:"user" };
 
-    localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(userData));
+//     localStorage.setItem("token", token);
+//     localStorage.setItem("user", JSON.stringify(userData));
 
-    setUser(userData);
+//     setUser(userData);
 
-    window.history.replaceState({}, document.title, "/");
+//     window.history.replaceState({}, document.title, "/");
 
-  } else {
+//   } else {
 
+//     const storedUser = localStorage.getItem("user");
+
+//     if (storedUser) {
+//       setUser(JSON.parse(storedUser));
+//     }
+
+//     // 👇 detect Supabase Google login
+//   supabase.auth.onAuthStateChange(async (event, session) => {
+//   if (session?.user) {
+//     const user = session.user;
+
+//     const userData = {
+//       user_id: user.id,
+//       name: user.user_metadata.full_name,
+//       email: user.email,
+//       role: "user"
+//     };
+
+//     localStorage.setItem("user", JSON.stringify(userData));
+//     setUser(userData);
+
+//     await axios.post("http://localhost:5000/auth/save-user", {
+//       user_id: user.id,
+//       name: user.user_metadata.full_name,
+//       email: user.email
+//     });
+//   }
+// });
+
+//     // checkGoogleUser();
+//   }
+
+// }, []);
+
+  useEffect(() => {
     const storedUser = localStorage.getItem("user");
 
     if (storedUser) {
       setUser(JSON.parse(storedUser));
+      window.dispatchEvent(new Event("userChanged"));
     }
 
-    // 👇 detect Supabase Google login
-    const checkGoogleUser = async () => {
-      const { data } = await supabase.auth.getUser();
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (session?.user) {
+          const user = session.user;
 
-      const user = data.user;
+          const userData = {
+            user_id: user.id,
+            name: user.user_metadata.full_name,
+            email: user.email,
+            role: "user"
+          };
 
-      if (user) {
-        const userData = {
-          name: user.user_metadata.full_name,
-          email: user.email,
-          role:"user"
-        };
+          localStorage.setItem("user", JSON.stringify(userData));
+          setUser(userData);
 
-        localStorage.setItem("user", JSON.stringify(userData));
-        setUser(userData);
+          window.dispatchEvent(new Event("userChanged"));
+          const alreadySaved = localStorage.getItem("userSaved");
+
+          if (!alreadySaved) {
+
+            console.log("calling save-user api..")
+            await axios.post("http://localhost:5000/auth/save-user", {
+              user_id: user.id,
+              name: user.user_metadata.full_name,
+              email: user.email,
+              role: "user" 
+            });
+
+            localStorage.setItem("userSaved", "true");
+          }
+        }
       }
-    };
+  );
 
-    checkGoogleUser();
-  }
-
-}, [location]);
+  return () => {
+    listener.subscription.unsubscribe();
+  };
+}, []);
 
   const handleLogout = async () => {
 
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("userSaved");
 
     await supabase.auth.signOut();
 
     setUser(null);
+    window.dispatchEvent(new Event("userChanged"));
 
     window.location.href = "/login";
   }

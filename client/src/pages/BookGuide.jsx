@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Calendar, Clock, Users, User, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "../hooks/use-toast";
+import axios from "axios";
 
 const timeSlots = [
   "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
@@ -19,6 +20,9 @@ export default function BookGuide() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const guideId = params.get("id") || "";
+
+  // console.log(guideId)
   const guideName = params.get("guide") || "";
   const guideLang = params.get("languages") || "";
 
@@ -29,21 +33,47 @@ export default function BookGuide() {
     time: "",
     groupSize: "",
     notes: "",
+    language:""
   });
 
   const handleChange = (field, value) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!form.name || !form.phone || !form.date || !form.time || !form.groupSize) {
-      toast({
-        title: "Missing fields",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      });
-      return;
-    }
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  if (!user) {
+    toast({
+      title: "Login required",
+      description: "Please login first",
+      variant: "destructive",
+    });
+    return;
+  }
+
+  // if (!form.name || !form.phone || !form.date || !form.time || !form.groupSize) {
+  //   toast({
+  //     title: "Missing fields",
+  //     description: "Please fill all required fields.",
+  //     variant: "destructive",
+  //   });
+  //   return;
+  // }
+
+  try {
+    const res = await axios.post("http://localhost:5000/booking/addTourBooking", {
+      user_id: user.user_id,
+      name: form.name,
+      phone_number: form.phone,
+      booking_date: form.date,
+      time_slot: form.time,
+      group_size: form.groupSize,
+      special_request: form.notes,
+      languages: form.language,
+      guide_id: guideId
+    });
 
     toast({
       title: "Booking Confirmed!",
@@ -51,7 +81,19 @@ export default function BookGuide() {
     });
 
     setTimeout(() => navigate("/tour-guide"), 1500);
-  };
+
+  } catch (error) {
+    console.log(error);
+    toast({
+      title: "Error",
+      description:
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Booking failed",
+      variant: "destructive",
+    });
+  }
+};
 
   return (
     <div className="container mx-auto px-4 py-10 max-w-xl">
@@ -172,6 +214,16 @@ export default function BookGuide() {
                 placeholder="Any special requirements..."
                 value={form.notes}
                 onChange={(e) => handleChange("notes", e.target.value)}
+              />
+            </div>
+
+             <div className="space-y-2">
+              <Label htmlFor="language">Language *</Label>
+              <Input
+                id="language"
+                placeholder="Enter your language"
+                value={form.language}
+                onChange={(e) => handleChange("language", e.target.value)}
               />
             </div>
 

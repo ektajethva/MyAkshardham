@@ -1,14 +1,14 @@
 const supabase = require("../config/supabaseClient")
 
 const addGuide = async (req,res) => {
-    const { name , photo , bio , languages , rating } = req.body;
+    const { name , photo_url , bio , languages , rating } = req.body;
 
     const { data , error } = await supabase
         .from("tour_guide")
         .insert([
             {
                 name:name,
-                photo:photo,
+                photo:photo_url,
                 bio:bio,
                 languages:languages,
                 rating:rating,

@@ -7,17 +7,6 @@ CREATE TABLE users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE bookings (
-    booking_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    booking_type VARCHAR(20) NOT NULL,  -- tour / visit / seva / parking
-    name VARCHAR(100) NOT NULL,
-    booking_date DATE NOT NULL,
-    persons INT NOT NULL CHECK (persons > 0),
-    status VARCHAR(20) DEFAULT 'pending',  -- pending / confirmed / cancelled
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-
 
 ALTER TABLE bookings
 ADD COLUMN user_id INT;
@@ -118,4 +107,69 @@ CREATE TABLE crowd (
     visit_date DATE UNIQUE NOT NULL,
     total_people INT DEFAULT 0,
     last_updated TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE payment_items (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  payment_id UUID NOT NULL,
+  product_id INT NOT NULL,
+  quantity INT DEFAULT 1,
+  price DECIMAL(10,2),
+
+  FOREIGN KEY (payment_id) REFERENCES payments(id) ON DELETE CASCADE,
+  FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
+
+CREATE TABLE visit_booking (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL,
+  name VARCHAR(100),
+  visit_date DATE,
+  number_of_person INT,
+  time_slot VARCHAR(50),
+  status VARCHAR(20) DEFAULT 'Pending'
+);
+
+CREATE TABLE seva_aarti_booking (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL,
+  name VARCHAR(100),
+  seva_type VARCHAR(100),
+  booking_date DATE,
+  donation_amount DECIMAL(10,2),
+  status VARCHAR(20) DEFAULT 'Pending'
+);
+
+CREATE TABLE parking_booking (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL,
+  name VARCHAR(100),
+  parking_date DATE,
+  vehicle_number VARCHAR(20),
+  time_slot VARCHAR(50),
+  status VARCHAR(20) DEFAULT 'Pending'
+);
+
+CREATE TABLE tour_guide_booking (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL,
+  name VARCHAR(100),
+  phone_number VARCHAR(15),
+  booking_date DATE,
+  time_slot VARCHAR(50),
+  group_size INT,
+  special_request TEXT,
+  languages VARCHAR(100),
+  status VARCHAR(20) DEFAULT 'Pending'
+);
+
+CREATE TABLE payment (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL,
+  product_id UUID,
+  amount DECIMAL(10,2),
+  payment_method VARCHAR(50),
+  payment_status VARCHAR(20) DEFAULT 'Pending',
+  transaction_id VARCHAR(100),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

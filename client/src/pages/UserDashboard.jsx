@@ -1,13 +1,11 @@
 import { Link } from "react-router-dom";
 import { Calendar, Flame, Car, MapPin, Ticket, ShoppingCart } from "lucide-react";
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
 // import { Button } from "@/components/ui/button";
 
-const stats = [
-  { label: "Temple Visits", value: "3", icon: MapPin },
-  { label: "Seva Booked", value: "2", icon: Flame },
-  { label: "Events Joined", value: "1", icon: Calendar },
-  { label: "Orders", value: "4", icon: ShoppingCart },
-];
+
 
 const actions = [
   { label: "Book Visit", path: "/book-visit", icon: Calendar },
@@ -19,6 +17,48 @@ const actions = [
 ];
 
 export default function UserDashboard() {
+
+  const [name, setName] = useState("")
+
+  const [statsData, setStatsData] = useState({
+    visits: 0,
+    seva: 0,
+    events: 0,
+    orders: 0
+  })
+
+  const stats = [
+    { label: "Temple Visits", value: statsData?.visits ?? 0, icon: MapPin },
+    { label: "Seva Booked", value: statsData?.seva ?? 0, icon: Flame },
+    { label: "Events Joined", value: statsData?.events ?? 0 , icon: Calendar },
+    { label: "Orders", value: statsData?.orders ?? 0 , icon: ShoppingCart },
+  ];
+
+  useEffect(() => {
+   const fetchStats = async () => {
+      try{
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        if(!user) return;
+
+        setName(user.name)
+
+        const res = await axios.get(
+          `http://localhost:5000/user/dashboard/${user.user_id}`
+        );
+
+        console.log("Fetched stats:", res.data);
+
+        setStatsData(res.data);
+      }catch (error) {
+      console.log("Failed to load stats", error);
+    }
+
+   }
+   fetchStats()
+  }, [])
+  
+
   return (
     <div className="container mx-auto px-4 py-8">
       
@@ -28,7 +68,7 @@ export default function UserDashboard() {
           Jai Swaminarayan! 🙏
         </h1>
         <p className="opacity-90">
-          Welcome back, Raj. May your day be blessed.
+          Welcome back, {name}. May your day be blessed.
         </p>
       </div>
 

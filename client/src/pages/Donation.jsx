@@ -4,6 +4,7 @@ import { Progress } from "../components/ui/progress";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
+import axios from "axios";
 
 const presetAmounts = [101, 251, 501, 1001, 2501, 5001];
 const goalAmount = 500000;
@@ -30,8 +31,30 @@ export default function DonationPage() {
     name: "Temple Donation",
     description: "Donation Payment",
     
-    handler: function (response) {
-      alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+    handler: async function (response) {
+      try {
+          const user = JSON.parse(localStorage.getItem("user"));
+
+          console.log("Payment Success:", response);
+
+          // ✅ Save donation in DB
+          await axios.post("http://localhost:5000/payment/addDonation", {
+            amount: amount,
+            method: "Razorpay",
+            date: new Date().toISOString(),
+            user_id: user?.user_id || null,
+            payment_id: response.razorpay_payment_id,
+            donor_name: name,
+            email: email,
+            phone: phone
+          });
+
+          alert("✅ Payment Successful! Thank you for your donation ❤️");
+
+        } catch (error) {
+          console.log("Error saving donation:", error);
+          alert("Payment successful but failed to save data.");
+        }
     },
 
     prefill: {
@@ -48,6 +71,8 @@ export default function DonationPage() {
   const rzp = new window.Razorpay(options);
   rzp.open();
 };
+
+
 
   return (
     <div className="container mx-auto px-4 py-10 max-w-xl">
