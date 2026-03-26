@@ -1,46 +1,31 @@
-// import { Button } from "@/components/ui/button";
 import { Clock, Calendar } from "lucide-react";
-import event1 from "../assets/event-1.jpg";
-import event2 from "../assets/event-2.jpg";
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
-
-const events = [
-  {
-    id: 1,
-    title: "Janmashtami Celebration",
-    date: "Aug 15, 2026",
-    time: "6:00 PM",
-    image: event1,
-    desc: "Grand celebration of Lord Krishna's birthday with aarti, bhajan, and prasad distribution.",
-  },
-  {
-    id: 2,
-    title: "Diwali Aarti Night",
-    date: "Oct 20, 2026",
-    time: "7:00 PM",
-    image: event2,
-    desc: "Festival of lights celebration with special aarti, fireworks, and community feast.",
-  },
-  {
-    id: 3,
-    title: "Rath Yatra",
-    date: "Jul 10, 2026",
-    time: "9:00 AM",
-    image: event1,
-    desc: "Annual chariot procession through the city with devotional singing.",
-  },
-  {
-    id: 4,
-    title: "Guru Purnima",
-    date: "Jul 21, 2026",
-    time: "5:00 PM",
-    image: event2,
-    desc: "Honoring the Guru parampara with special pujas and discourses.",
-  },
-];
+import { useState, useEffect } from "react";
+import { toast } from "../hooks/use-toast";
 
 export default function EventsPage() {
+  const [events, setEvents] = useState([]);
+
+  const fetchEvents = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/Event/getEvents");
+      const data = await res.json();
+
+      setEvents(data);
+      console.log(data);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load events. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="font-heading text-2xl font-bold text-foreground mb-2">Temple Events</h1>
@@ -51,10 +36,10 @@ export default function EventsPage() {
       <div className="grid md:grid-cols-2 gap-6">
         {events.map((e) => (
           <div
-            key={e.id}
+            key={e.event_id}
             className="bg-card rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-shadow"
           >
-            <img src={e.image} alt={e.title} className="w-full h-48 object-cover" />
+            <img src={e.image_url} alt={e.name} className="w-full h-48 object-cover" />
             <div className="p-5">
               <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-2">
                 <span className="flex items-center gap-1">
@@ -64,9 +49,9 @@ export default function EventsPage() {
                   <Clock className="h-3.5 w-3.5" /> {e.time}
                 </span>
               </div>
-              <h3 className="font-heading text-lg font-semibold text-foreground mb-2">{e.title}</h3>
-              <p className="text-sm text-muted-foreground mb-4">{e.desc}</p>
-              <Link to={`/events/${e.id}`}>
+              <h3 className="font-heading text-lg font-semibold text-foreground mb-2">{e.name}</h3>
+              <p className="text-sm text-muted-foreground mb-4">{e.description}</p>
+              <Link to={`/events/${e.event_id}`}>
                 <Button variant="outline" size="sm">
                   View Details
                 </Button>

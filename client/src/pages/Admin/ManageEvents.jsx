@@ -6,6 +6,7 @@ import { Plus, Pencil, Trash2, X, Calendar, MapPin } from "lucide-react";
 import { useState, useEffect } from "react";
 // import { supabase } from "@/integrations/supabase/client";
 import { toast } from "../../hooks/use-toast";
+import axios from "axios";
 
 const emptyForm = {
   name: "",
@@ -24,18 +25,30 @@ export default function ManageEvents() {
   const [showForm, setShowForm] = useState(false);
 
   const fetchEvents = async () => {
-    const { data } = await supabase
-      .from("events")
-      .select("*")
-      .order("date", { ascending: true });
-
-    setEvents(data || []);
-    setLoading(false);
+     try {
+      const res = await fetch("http://localhost:5000/Event/getEvents");
+      const data = await res.json();
+        console.log(data);
+      setEvents(data);
+      setLoading(false);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load events. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   useEffect(() => {
     fetchEvents();
   }, []);
+
+    const openAdd = () => {
+    setForm(emptyForm);
+    setEditingId(null);
+    setShowForm(true);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,56 +62,50 @@ export default function ManageEvents() {
       return;
     }
 
-    if (editingId) {
-      const { error } = await supabase
-        .from("events")
-        .update({
-          name: form.name,
-          description: form.description,
-          date: form.date,
-          time: form.time,
-          image_url: form.image_url,
-          place: form.place,
-        })
-        .eq("id", editingId);
+    const payload = {    
+      name: form.name,
+      description: form.description,
+      date: form.date,
+      time: form.time,
+      image_url: form.image_url,
+      place: form.place,
+    };
 
-      if (error) {
-        toast({
-          title: "Failed to update event",
-          description: error.message,
-          variant: "destructive",
-        });
-      } else {
+    try {
+      if (editingId) {
+        await axios.put(
+          `http://localhost:5000/Event/updateEvent/${editingId}`,
+           payload
+        );
+       
         toast({ title: "Event updated successfully" });
-      }
-    } else {
-      const { error } = await supabase.from("events").insert({
-        name: form.name,
-        description: form.description,
-        date: form.date,
-        time: form.time,
-        image_url: form.image_url,
-        place: form.place,
-      });
-
-      if (error) {
+      } 
+      else {
+        await axios.post(
+          "http://localhost:5000/Event/addEvent",
+           payload
+        );
+        toast({ title: "Event added successfully" });
+      }    
+        setForm(emptyForm);
+        setEditingId(null);
+        setShowForm(false);
+        fetchEvents();
+    }
+    catch (error) {
+      console.log(error);
+      
         toast({
-          title: "Failed to add event",
-          description: error.message,
+          title: "Error",
+          description: "Failed to save event. Please try again.",
           variant: "destructive",
         });
-      } else {
-        toast({ title: "Event added successfully" });
       }
-    }
+    };
 
-    setForm(emptyForm);
-    setEditingId(null);
-    setShowForm(false);
-    fetchEvents();
-  };
 
   const handleEdit = (event) => {
+    console.log("Editing event:", event);
     setForm({
       name: event.name,
       description: event.description || "",
@@ -108,22 +115,27 @@ export default function ManageEvents() {
       place: event.place || "",
     });
 
-    setEditingId(event.id);
+    setEditingId(event.event_id);
     setShowForm(true);
   };
 
   const handleDelete = async (id) => {
-    const { error } = await supabase.from("events").delete().eq("id", id);
-
-    if (error) {
+    if (!confirm("Are you sure you want to delete this event?")) {
+      return;
+    }
+    try {
+      await axios.delete(`http://localhost:5000/Event/deleteEvent/${id}`);
+      toast({ title: "Event deleted successfully" });
+      fetchEvents();
+    }
+    catch (error) {
+      console.log(error);
+      
       toast({
-        title: "Failed to delete event",
-        description: error.message,
+        title: "Error",
+        description: "Failed to delete event. Please try again.",
         variant: "destructive",
       });
-    } else {
-      toast({ title: "Event deleted" });
-      fetchEvents();
     }
   };
 
@@ -252,7 +264,6 @@ export default function ManageEvents() {
           </form>
         </div>
       )}
-
       {loading ? (
         <p className="text-muted-foreground">Loading events...</p>
       ) : events.length === 0 ? (
@@ -263,7 +274,7 @@ export default function ManageEvents() {
         <div className="bg-card rounded-xl shadow-card divide-y divide-border">
           {events.map((e) => (
             <div
-              key={e.id}
+              key={e.event_id}
               className="flex items-start justify-between p-4 gap-4"
             >
               {e.image_url && (
@@ -312,7 +323,7 @@ export default function ManageEvents() {
                   variant="outline"
                   size="sm"
                   className="text-destructive"
-                  onClick={() => handleDelete(e.id)}
+                  onClick={() => handleDelete(e.event_id)}
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </Button>

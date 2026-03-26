@@ -85,29 +85,6 @@ export default function DonationPage() {
         <p className="text-muted-foreground">Support the temple and its divine mission</p>
       </div>
 
-      {/* Live progress card */}
-      <div className="bg-card rounded-2xl border border-border shadow-card p-6 mb-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
-        <div className="flex items-center gap-2 mb-3">
-          <Sparkles className="h-4 w-4 text-primary" />
-          <span className="text-sm font-semibold text-foreground">Live Donation Progress</span>
-        </div>
-        <Progress value={progress} className="h-3 mb-3" />
-        <div className="flex items-center justify-between">
-          <div>
-            <span className="text-primary font-bold text-xl">₹{collectedAmount.toLocaleString("en-IN")}</span>
-            <span className="text-muted-foreground text-sm ml-1">raised</span>
-          </div>
-          <div className="text-right">
-            <span className="text-muted-foreground text-xs">Goal</span>
-            <span className="text-foreground font-semibold text-sm ml-1">₹{goalAmount.toLocaleString("en-IN")}</span>
-          </div>
-        </div>
-        <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
-          <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
-          <span>142 devotees have donated this month</span>
-        </div>
-      </div>
-
       {/* Donation form */}
       <form
         className="bg-card rounded-2xl border border-border shadow-card p-6 space-y-6 animate-fade-in"

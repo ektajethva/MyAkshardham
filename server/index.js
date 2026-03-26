@@ -23,7 +23,7 @@ app.use("/Guide",require("./routes/tourGuideRoutes"))
 app.use("/booking",require("./routes/bookingRoute"))
 app.use("/payment",require("./routes/paymentRoute"))
 app.use("/user",require("./routes/userstatsRoute"))
-
+app.use("/Event",require("./routes/eventRoutes"))
 
 app.listen(5000,()=>{
     console.log('Server running on 5000')

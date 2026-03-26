@@ -1,20 +1,18 @@
 const supabase = require("../config/supabaseClient")
 
 const addEvent = async (req,res) => {
-    const { name , description , price , stock , image_url } = req.body;
-
-    const status = stock > 0 ? "available" : "unavailable";
+    const { name , description , date , time, image_url, place} = req.body;
 
     const { data , error } = await supabase
         .from("events")
         .insert([
             {
-                event_name:name,
+                name:name,
                 description:description,
-                price:price,
-                stock:stock,
-                image:image_url,
-                status:status
+                date:date,
+                time:time,
+                image_url:image_url,
+                place:place
             }
         ])
     
@@ -25,24 +23,23 @@ const addEvent = async (req,res) => {
     res.json({message:"event added",data})
 }
 
+
 const updateEvent = async (req,res) => {
 
     const { event_id } = req.params;
 
-    const { name , description , price , stock , image_url } = req.body;
-
-    const status = stock > 0 ? "available" : "unavailable";
+    const { name , description , date , time, image_url, place} = req.body;
 
     const { data , error } = await supabase
         .from("events")
         .update([
             {
-                event_name:name,
+                name:name,
                 description:description,
-                price:price,
-                stock:stock,
-                image:image_url,
-                status:status
+                date:date,
+                time:time,
+                image_url:image_url,
+                place:place     
             }
         ])
         .eq("event_id",event_id)
@@ -78,7 +75,7 @@ const deleteEvent = async (req,res) => {
     })
 }
 
-const getEvent = async (req,res) => {
+const getEvents = async (req,res) => {
     const { data, error } = await supabase
         .from("events")
         .select("*")
@@ -94,4 +91,63 @@ const getEvent = async (req,res) => {
     res.json(data)
 }
 
-module.exports = { addEvent ,  updateEvent , deleteEvent , getEvent}
+const getEvent = async (req,res) => {
+    const { event_id } = req.params;    
+    const { data, error } = await supabase
+        .from("events")
+        .select("*")
+        .eq("event_id", event_id)
+        .single();
+
+    if(error){
+        return res.status(500).json({
+            message: "Failed to fetch event",
+            error: error.message,
+        })
+    }
+
+    res.json(data)
+}
+
+const participateEvent = async (req, res) => {
+  const { name, email, phone, event_id, user_id } = req.body;
+
+  try {
+    const payload = {
+      event_id,
+      user_name: name,
+      email,
+      phone,
+      user_id: user_id || null,
+      registration_date: new Date().toISOString(),
+      status: "registered",
+    };
+
+    // ✅ SINGLE INSERT ONLY
+    const { data, error } = await supabase
+      .from("event_participant")
+      .insert([payload])
+      .select();
+
+    if (error) {
+      return res.status(500).json({
+        message: "Failed to register participation",
+        error: error.message,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Participation registered successfully",
+      data: data,
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: "Server error during participation registration",
+      error: error.message,
+    });
+  }
+};
+
+
+module.exports = { addEvent ,  updateEvent , deleteEvent , getEvents , getEvent, participateEvent }

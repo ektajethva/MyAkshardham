@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Button } from "../components/ui/button";
 import { Calendar, Flame, Car, Users, Clock, ArrowRight } from "lucide-react";
 import templeHero from "../assets/temple-hero.jpg";
-import event1 from "../assets/event-1.jpg";
-import event2 from "../assets/event-2.jpg";
 import MapSection from "../components/MapSection";
 
 const quickActions = [
@@ -13,12 +12,30 @@ const quickActions = [
   { label: "Parking", icon: Car, path: "/parking", color: "gradient-gold" },
 ];
 
-const upcomingEvents = [
-  { title: "Janmashtami Celebration", date: "Aug 15, 2026", image: event1 },
-  { title: "Diwali Aarti Night", date: "Oct 20, 2026", image: event2 },
-];
 
 export default function HomePage() {
+    const [events, setEvents] = useState([]);
+
+    const fetchEvents = async () => {
+     try {
+      const res = await fetch("http://localhost:5000/Event/getEvents");
+      const data = await res.json();
+
+      setEvents(data);
+      console.log(data);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load events. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
   return (
     <div>
       {/* Hero */}
@@ -32,18 +49,7 @@ export default function HomePage() {
           <p className="text-primary-foreground/90 text-lg md:text-xl mb-8 font-light">
             Experience divine peace, devotion, and community at the Swaminarayan Temple
           </p>
-          <div className="flex flex-wrap gap-3 justify-center">
-            <Link to="/book-visit">
-              <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-semibold shadow-saffron">
-                Book a Visit
-              </Button>
-            </Link>
-            <Link to="/events">
-              <Button size="lg" variant="outline" className="border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10">
-                View Events
-              </Button>
-            </Link>
-          </div>
+          
         </div>
       </section>
 
@@ -96,15 +102,15 @@ export default function HomePage() {
           </Link>
         </div>
         <div className="grid md:grid-cols-2 gap-6">
-          {upcomingEvents.map((e) => (
-            <div key={e.title} className="bg-card rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-shadow">
-              <img src={e.image} alt={e.title} className="w-full h-48 object-cover" />
+          {events.map((e) => (
+            <div key={e.event_id} className="bg-card rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-shadow">
+              <img src={e.image_url} alt={e.name} className="w-full h-48 object-cover" />
               <div className="p-5">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
                   <Clock className="h-4 w-4" />
                   {e.date}
                 </div>
-                <h3 className="font-heading text-lg font-semibold text-foreground mb-3">{e.title}</h3>
+                <h3 className="font-heading text-lg font-semibold text-foreground mb-3">{e.name}</h3>
                 <Link to="/events">
                   <Button variant="outline" size="sm">View Details</Button>
                 </Link>

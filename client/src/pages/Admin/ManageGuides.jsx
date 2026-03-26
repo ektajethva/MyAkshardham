@@ -57,7 +57,7 @@ export default function ManageGuides() {
       rating: String(p.rating || 4.5),
     });
 
-    setEditingId(p.id || p.guide_id);
+    setEditingId(p.guide_id);
     setShowForm(true);
   };
 
@@ -258,9 +258,8 @@ export default function ManageGuides() {
       ) : (
         <div className="bg-card rounded-xl shadow-card divide-y divide-border">
           {guides.map((g) => (
-            console.log(g),
             <div
-              key={g.id || g.guide_id}
+              key={g.guide_id}
               className="flex items-start justify-between p-4 gap-4"
             >
               {g.photo && (
