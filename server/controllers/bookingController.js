@@ -133,4 +133,90 @@ const add_Tour_Guide_Booking = async (req,res) => {
     });
 }
 
-module.exports = { add_Visit_Booking , add_Seva_Booking , add_Parking_Booking , add_Tour_Guide_Booking}
+const tableMap = {
+    visit: { table: "visit_booking",date:"visit_date"},
+    seva: { table: "seva_aarti_booking",date:"seva_date"},
+    parking: { table: "parking_booking",date:"parking_date"},
+    tour: { table: "tour_guide_booking",date:"booking_date"},
+}
+
+const getAllBooking = async (req,res) => {
+     try {
+    const { type } = req.params;
+
+    const config = tableMap[type];
+
+    const { data, error } = await supabase
+      .from(config.table)
+      .select("*")
+      .order(config.date, { ascending: false });
+
+    if (error) {
+      console.log("❌ Error:", error);
+      return res.status(400).json({ error: error.message });
+    }
+
+    res.json(data);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+const updateBooking = async (req,res) => {
+    try {
+        const { type, id } = req.params;
+        const { status } = req.body;
+
+        const config = tableMap[type];
+
+        console.log("TYPE:", type);
+        console.log("TABLE:", config?.table);
+        console.log("ID:", id);
+        console.log("STATUS:", status);
+
+        const { data, error } = await supabase
+        .from(config.table)
+        .update({ status })
+        .eq("id", id)
+        .select();
+
+        if (error) {
+        return res.status(400).json({ error: error.message });
+        }
+
+         if (!data || data.length === 0) {
+            return res.status(404).json({ message: "No row updated" });
+        }
+
+        res.json({ message: "Status updated", data });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+const fetchUserBooking = async (req,res) => {
+    try {
+    const { type, user_id } = req.params;
+
+    const config = tableMap[type];
+
+    const { data, error } = await supabase
+      .from(config.table)
+      .select("*")
+      .eq("user_id", user_id) // 🔥 IMPORTANT
+      .order(config.date, { ascending: false });
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    res.json(data);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+module.exports = { add_Visit_Booking , add_Seva_Booking , add_Parking_Booking , add_Tour_Guide_Booking , getAllBooking , updateBooking , fetchUserBooking}

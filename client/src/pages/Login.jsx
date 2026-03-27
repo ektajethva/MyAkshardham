@@ -41,6 +41,7 @@ const handleSubmit = async (e) => {
     
     localStorage.setItem("token",token);
     localStorage.setItem("user",JSON.stringify(user));
+    
 
     
     toast({ title: "Login successful" });

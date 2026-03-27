@@ -5,6 +5,7 @@ import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import axios from "axios";
+import { toast } from "sonner";
 
 const presetAmounts = [101, 251, 501, 1001, 2501, 5001];
 const goalAmount = 500000;
@@ -49,11 +50,11 @@ export default function DonationPage() {
             phone: phone
           });
 
-          alert("✅ Payment Successful! Thank you for your donation ❤️");
+          toast.success("✅ Payment Successful! Thank you for your donation ❤️");
 
         } catch (error) {
           console.log("Error saving donation:", error);
-          alert("Payment successful but failed to save data.");
+          toast.error("Payment successful but failed to save data.");
         }
     },
 

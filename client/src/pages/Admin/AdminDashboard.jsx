@@ -1,13 +1,63 @@
+import axios from "axios";
 import { Users, Ticket, Calendar, IndianRupee } from "lucide-react";
+import { useEffect, useState } from "react";
 
-const stats = [
-  { label: "Total Users", value: "1,284", icon: Users, change: "+12%" },
-  { label: "Total Bookings", value: "856", icon: Ticket, change: "+8%" },
-  { label: "Total Events", value: "24", icon: Calendar, change: "+2" },
-  { label: "Revenue", value: "₹4,52,000", icon: IndianRupee, change: "+15%" },
-];
+// const stats = [
+//   { label: "Total Users", value: "1,284", icon: Users, change: "+12%" },
+//   { label: "Total Bookings", value: "856", icon: Ticket, change: "+8%" },
+//   { label: "Total Events", value: "24", icon: Calendar, change: "+2" },
+//   { label: "Revenue", value: "₹4,52,000", icon: IndianRupee, change: "+15%" },
+// ];
 
 export default function AdminDashboard() {
+
+  const [stats, setStats] = useState([])
+  const [booking, setBooking] = useState([])
+
+  useEffect(() => {
+   fetchDashboard();
+  }, [])
+
+  const fetchDashboard = async () => {
+     try {
+    const statsRes = await axios.get("http://localhost:5000/admin/stats");
+    const bookingRes = await axios.get("http://localhost:5000/admin/recentBooking");
+
+    setStats([
+      {
+        label: "Total Users",
+        value: statsRes.data.total_users || 0,
+        icon: Users,
+        change: "+12%"
+      },
+      {
+        label: "Total Bookings",
+        value: statsRes.data.total_bookings || 0,
+        icon: Ticket,
+        change: "+8%"
+      },
+      {
+        label: "Total Events",
+        value: statsRes.data.total_events || 0,
+        icon: Calendar,
+        change: "+2"
+      },
+      {
+        label: "Revenue",
+        value: `₹${statsRes.data.revenue}` || 0,
+        icon: IndianRupee,
+        change: "+15%"
+      },
+    ]);
+
+    console.log("STATS:", statsRes.data);
+    setBooking(bookingRes.data);
+
+  } catch (err) {
+    console.log(err);
+  }
+  }
+  
   return (
     <div>
       <h1 className="font-heading text-2xl font-bold text-foreground mb-6">
@@ -55,7 +105,7 @@ export default function AdminDashboard() {
             </thead>
 
             <tbody className="divide-y divide-border">
-              {[
+              {/* {[
                 {
                   id: "#B001",
                   name: "Raj Patel",
@@ -83,6 +133,38 @@ export default function AdminDashboard() {
                   <td className="py-3 text-foreground">{b.name}</td>
                   <td className="py-3 text-foreground">{b.type}</td>
                   <td className="py-3 text-muted-foreground">{b.date}</td>
+                  <td className="py-3">
+                    <span
+                      className={`text-xs font-medium px-2 py-1 rounded-full ${
+                        b.status === "Confirmed"
+                          ? "bg-green-50 text-green-700"
+                          : "bg-accent text-accent-foreground"
+                      }`}
+                    >
+                      {b.status}
+                    </span>
+                  </td>
+                </tr>
+              ))} */}
+
+              {booking.map((b)=>(
+                <tr key={b.id}>
+                  <td className="py-3 font-mono text-foreground">
+                    #{b.id}
+                  </td>
+
+                  <td className="py-3 text-foreground">
+                    {b.name}
+                  </td>
+
+                  <td className="py-3 text-foreground">
+                    Visit
+                  </td>
+
+                  <td className="py-3 text-muted-foreground">
+                    {new Date(b.visit_date || b.created_at).toLocaleDateString()}
+                  </td>
+
                   <td className="py-3">
                     <span
                       className={`text-xs font-medium px-2 py-1 rounded-full ${

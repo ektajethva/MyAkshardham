@@ -13,13 +13,14 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
+import { supabase } from "../lib/supabaseClient";
 
 const adminLinks = [
   { label: "Dashboard", path: "/admin", icon: LayoutDashboard },
   { label: "Events", path: "/admin/events", icon: Calendar },
   { label: "Products", path: "/admin/products", icon: Package },
   { label: "Bookings", path: "/admin/bookings", icon: Ticket },
-  { label: "Crowd Status", path: "/admin/crowd", icon: Users },
+  // { label: "Crowd Status", path: "/admin/crowd", icon: Users },
   { label: "Orders", path: "/admin/orders", icon: ShoppingCart },
   { label: "Donations", path: "/admin/donations", icon: BarChart3 },
   { label: "Tour Guides", path: "/admin/guides", icon: Users },
@@ -29,6 +30,21 @@ export default function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    const handleLogout = async () => {
+  try {
+    localStorage.clear();
+
+    await supabase.auth.signOut();
+
+    window.dispatchEvent(new Event("userChanged"));
+
+    navigate("/login", {replace:true});
+
+  } catch (error) {
+    console.error("Logout error:", error);
+  }
+};
 
   const SidebarContent = () => (
     <>
@@ -67,7 +83,7 @@ export default function AdminLayout() {
         </Link>
 
         <button
-          onClick={() => navigate("/login")}
+          onClick={handleLogout}
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent transition-colors w-full"
         >
           <LogOut className="h-4 w-4" />

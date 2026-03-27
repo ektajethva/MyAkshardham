@@ -29,9 +29,12 @@ import ManageCrowd from "./pages/Admin/ManageCrowd";
 import ViewOrders from "./pages/Admin/ViewOrders";
 import ManageDonations from "./pages/Admin/ManageDonations";
 import NotFound from "./pages/NotFound";
-import AdminDashboard from "./Pages/Admin/AdminDashboard";
+// import AdminDashboard from "./Pages/Admin/AdminDashboard";
 import ReceiptPage from "./pages/ReceiptPage";
 import ManageGuides from "./pages/Admin/ManageGuides";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+import SettingsPage from "./pages/Setting";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
 
@@ -67,9 +70,13 @@ const App = () => {
               <Route path="/parking" element={<ParkingPage />} />
               <Route path="/crowd-status" element={<CrowdStatusPage />} />
               <Route path="/donation" element={<DonationPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              
             </Route>
 
             {/* Admin routes */}
+            
+            <Route element={<ProtectedRoute rolerequired="admin"/>}>
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="events" element={<ManageEvents />} />
@@ -80,6 +87,7 @@ const App = () => {
               <Route path="donations" element={<ManageDonations />} />
               <Route path="guides" element={<ManageGuides />} />
 
+            </Route>
             </Route>
 
             <Route path="*" element={<NotFound />} />

@@ -42,7 +42,7 @@ const loginUser = async (req, res) => {
       id: data.user_id,
       name: data.name,
       email: data.email,
-      role: role
+      role: data.role
     },
     process.env.JWT_SECRET,
     {expiresIn:"30d"}
@@ -113,5 +113,98 @@ const saveUser = async (req, res) => {
 const logout = async ( req, res) =>{
   res.json({ message: "Logout Succesfully"});
 }
-module.exports = { googleLogin, registerUser, loginUser, logout , saveUser };
+
+const updateProfile = async (req, res) => {
+  try {
+    const { user_id, name, email, phone, password } = req.body;
+
+    if (!user_id) {
+      return res.status(400).json({ error: "User ID required" });
+    }
+
+    const { data: existingUser, error: fetchError } = await supabase
+      .from("users")
+      .select("image")
+      .eq("user_id", user_id)
+      .single();
+
+    if (fetchError) {
+      return res.status(400).json({ error: fetchError.message });
+    }
+
+    let imageUrl = existingUser.image;
+
+    // ✅ IMAGE UPLOAD FIXED
+    if (req.file) {
+      const fileName = `${user_id}-${Date.now()}.jpg`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("profile-images")
+        .upload(fileName, req.file.buffer, {
+          contentType: req.file.mimetype,
+        });
+
+      if (uploadError) {
+        console.log("UPLOAD ERROR:", uploadError);
+        return res.status(400).json({ error: uploadError.message });
+      }
+
+      // ✅ IMPORTANT FIX (NO const here)
+      imageUrl = `${process.env.SUPABASE_URL}/storage/v1/object/public/profile-images/${fileName}`;
+    }
+
+    const updateData = {
+      name,
+      email,
+      phone: phone === "null" || phone === "" ? null : Number(phone),
+      image: imageUrl,
+    };
+
+    if (password && password.trim() !== "") {
+      updateData.password = password;
+    }
+
+    const { data, error } = await supabase
+      .from("users")
+      .update(updateData)
+      .eq("user_id", user_id)
+      .select();
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    res.json({
+      message: "Profile updated successfully",
+      user: data[0],
+    });
+
+  } catch (err) {
+    console.log("SERVER ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const getUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("user_id", id)
+      .single();
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    res.json(data);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+module.exports = { googleLogin, registerUser, loginUser, logout , saveUser , updateProfile , getUser};
 

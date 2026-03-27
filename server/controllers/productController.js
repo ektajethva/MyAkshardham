@@ -94,4 +94,70 @@ const getProduct = async (req,res) => {
     res.json(data)
 }
 
-module.exports = { addProduct ,  updateProduct , deleteProduct , getProduct}
+const getAllOrder = async (req,res) => {
+    try {
+    const { data, error } = await supabase
+      .from("orders")
+      .select("*")
+      .order("order_id", { ascending: false });
+
+    if (error) return res.status(400).json({ error: error.message });
+
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+const updateOrderStatus = async (req, res) => {
+  try {
+    const { id } = req.params; // this is actually order_id
+    const { status } = req.body;
+
+    console.log("👉 ID:", id);
+    console.log("👉 STATUS:", status);
+
+    const { data, error } = await supabase
+      .from("orders")
+      .update({ status:status })
+      .eq("order_id", id)   // ✅ FIX HERE
+      .select();
+
+    if (error) return res.status(400).json({ error: error.message });
+
+    res.json({ message: "Updated", data });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const getUserOrder = async (req,res) => {
+    try {
+    const { user_id } = req.params; // OR req.user.id if using auth 
+
+    const { data, error } = await supabase
+      .from("orders")
+      .select(`
+        order_id,
+        product_name,
+        total,
+        date,
+        status,
+        user_id
+      `)
+      .eq("user_id", user_id)
+      .order("date", { ascending: false });
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    res.status(200).json(data);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+module.exports = { addProduct ,  updateProduct , deleteProduct , getProduct , getAllOrder , updateOrderStatus, getUserOrder}

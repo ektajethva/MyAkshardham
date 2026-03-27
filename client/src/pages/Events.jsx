@@ -39,7 +39,7 @@ export default function EventsPage() {
             key={e.event_id}
             className="bg-card rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-shadow"
           >
-            <img src={e.image_url} alt={e.name} className="w-full h-48 object-cover" />
+            <img src={e.image_url} srcSet={`${e.image_url} 1x, ${e.image_url_highres} 2x`} alt={e.name} className="w-full h-48 object-cover" />
             <div className="p-5">
               <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-2">
                 <span className="flex items-center gap-1">

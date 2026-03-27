@@ -4,31 +4,43 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Progress } from "../../components/ui/progress";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
+import { useEffect } from "react";
+import axios from "axios";
 
-const stats = [
-  { label: "Total Collected", value: "₹3,27,500", icon: IndianRupee, change: "+18%", color: "text-primary" },
-  { label: "This Month", value: "₹52,300", icon: TrendingUp, change: "+12%", color: "text-green-600" },
-  { label: "Total Donors", value: "142", icon: Users, change: "+9", color: "text-blue-600" },
-  { label: "Avg Donation", value: "₹2,306", icon: Heart, change: "+5%", color: "text-primary" },
-];
+// const stats = [
+//   { label: "Total Collected", value: "₹3,27,500", icon: IndianRupee, change: "+18%", color: "text-primary" },
+//   { label: "This Month", value: "₹52,300", icon: TrendingUp, change: "+12%", color: "text-green-600" },
+//   { label: "Total Donors", value: "142", icon: Users, change: "+9", color: "text-blue-600" },
+//   { label: "Avg Donation", value: "₹2,306", icon: Heart, change: "+5%", color: "text-primary" },
+// ];
 
-const donors = [
-  { id: "D001", name: "Raj Patel", email: "raj@email.com", amount: 5001, date: "Feb 25, 2026", method: "UPI" },
-  { id: "D002", name: "Priya Shah", email: "priya@email.com", amount: 2501, date: "Feb 24, 2026", method: "Card" },
-  { id: "D003", name: "Amit Desai", email: "amit@email.com", amount: 1001, date: "Feb 23, 2026", method: "UPI" },
-  { id: "D004", name: "Neha Joshi", email: "neha@email.com", amount: 501, date: "Feb 22, 2026", method: "Net Banking" },
-  { id: "D005", name: "Vivek Sharma", email: "vivek@email.com", amount: 10001, date: "Feb 21, 2026", method: "UPI" },
-  { id: "D006", name: "Meera Iyer", email: "meera@email.com", amount: 251, date: "Feb 20, 2026", method: "Card" },
-  { id: "D007", name: "Kiran Modi", email: "kiran@email.com", amount: 5001, date: "Feb 19, 2026", method: "UPI" },
-];
+// const donors = [
+//   { id: "D001", name: "Raj Patel", email: "raj@email.com", amount: 5001, date: "Feb 25, 2026", method: "UPI" },
+//   { id: "D002", name: "Priya Shah", email: "priya@email.com", amount: 2501, date: "Feb 24, 2026", method: "Card" },
+//   { id: "D003", name: "Amit Desai", email: "amit@email.com", amount: 1001, date: "Feb 23, 2026", method: "UPI" },
+//   { id: "D004", name: "Neha Joshi", email: "neha@email.com", amount: 501, date: "Feb 22, 2026", method: "Net Banking" },
+//   { id: "D005", name: "Vivek Sharma", email: "vivek@email.com", amount: 10001, date: "Feb 21, 2026", method: "UPI" },
+//   { id: "D006", name: "Meera Iyer", email: "meera@email.com", amount: 251, date: "Feb 20, 2026", method: "Card" },
+//   { id: "D007", name: "Kiran Modi", email: "kiran@email.com", amount: 5001, date: "Feb 19, 2026", method: "UPI" },
+// ];
 
 const goalAmount = 500000;
-const collectedAmount = 327500;
+// const collectedAmount = 327500;
 
 export default function ManageDonations() {
+
+  const [stats, setStats] = useState({
+    totalAmount: 0,
+    totalDonors: 0,
+    avgDonation: 0,
+    thisMonthAmount: 0
+  })
+  const [donors, setDonors] = useState([])
+
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
 
+  const collectedAmount = stats.totalAmount;
   const progress = Math.min((collectedAmount / goalAmount) * 100, 100);
 
   const filteredDonors = donors.filter((d) => {
@@ -36,6 +48,70 @@ export default function ManageDonations() {
     const matchFilter = filter === "all" || d.method === filter;
     return matchSearch && matchFilter;
   });
+
+  const statsData = [
+  {
+    label: "Total Collected",
+    value: `₹${stats.totalAmount.toLocaleString("en-IN")}`,
+    icon: IndianRupee,
+    change: "+18%",
+    color: "text-primary"
+  },
+  {
+    label: "This Month",
+    value: `₹${stats.thisMonthAmount.toLocaleString("en-IN")}`,
+    icon: TrendingUp,
+    change: "+12%",
+    color: "text-green-600"
+  },
+  {
+    label: "Total Donors",
+    value: stats.totalDonors,
+    icon: Users,
+    change: "+9",
+    color: "text-blue-600"
+  },
+  {
+    label: "Avg Donation",
+    value: `₹${stats.avgDonation.toLocaleString("en-IN")}`,
+    icon: Heart,
+    change: "+5%",
+    color: "text-primary"
+  }
+];
+
+  useEffect(() => {
+   fetchDonation()
+   fetchStats()
+  }, [])
+
+  const fetchDonation = async () => {
+     try {
+      const res = await axios.get("http://localhost:5000/payment/Donation");
+
+      const formatted = res.data.map((d) => ({
+        id: d.donor_id,
+        name: d.users?.name || "User " + d.user_id,
+        email: d.users?.email || "N/A",
+        amount: d.amount,
+        date: new Date(d.date).toLocaleDateString("en-IN"),
+        method: d.methods,
+      }));
+
+      setDonors(formatted);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  
+  const fetchStats = async () => {
+     try {
+        const res = await axios.get("http://localhost:5000/payment/Donation/Stats");
+        setStats(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+  }
 
   return (
     <div>
@@ -51,7 +127,7 @@ export default function ManageDonations() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {stats.map((s) => (
+        {statsData.map((s) => (
           <div key={s.label} className="bg-card rounded-xl border border-border shadow-card p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center">

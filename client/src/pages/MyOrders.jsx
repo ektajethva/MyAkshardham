@@ -1,10 +1,13 @@
+import axios from "axios";
 import { Package } from "lucide-react";
+import { useEffect } from "react";
+import { useState } from "react";
 
-const orders = [
-  { id: "#ORD001", date: "Jul 20, 2026", items: "Tulsi Mala, Diya Set", total: 749, status: "Delivered" },
-  { id: "#ORD002", date: "Aug 01, 2026", items: "Bhagavad Gita", total: 350, status: "Shipped" },
-  { id: "#ORD003", date: "Aug 10, 2026", items: "Puja Thali", total: 799, status: "Processing" },
-];
+// const orders = [
+//   { id: "#ORD001", date: "Jul 20, 2026", items: "Tulsi Mala, Diya Set", total: 749, status: "Delivered" },
+//   { id: "#ORD002", date: "Aug 01, 2026", items: "Bhagavad Gita", total: 350, status: "Shipped" },
+//   { id: "#ORD003", date: "Aug 10, 2026", items: "Puja Thali", total: 799, status: "Processing" },
+// ];
 
 const statusColor = {
   Delivered: "bg-green-100 text-green-700",
@@ -13,8 +16,44 @@ const statusColor = {
 };
 
 export default function MyOrdersPage() {
+
+  const [orders, setOrders] = useState([])
+
+  useEffect(() => {
+   fetchOrders()
+  }, [])
+
+  const fetchOrders = async () => {
+     const user = JSON.parse(localStorage.getItem("user"));
+
+     try {
+    if (!user?.user_id) {
+      console.log("User not found");
+      return;
+    }
+
+    const res = await axios.get(
+      `http://localhost:5000/Product/getUserOrder/${user.user_id}`
+    );
+
+    console.log(res.data)
+    const formatted = res.data.map((o) => ({
+      id: "#ORD" + o.order_id,
+      date: new Date(o.date).toLocaleDateString("en-IN"),
+      items: o.product_name,
+      total: o.total,
+      status: o.status
+    }));
+
+    setOrders(formatted);
+
+  } catch (err) {
+    console.log(err);
+  }
+  }
+  
   return (
-    <div className="container mx-auto px-4 py-8 max-w-2xl">
+    <div className="container mx-auto px-4 py-8 max-w-2xl bg-gray-100">
       <h1 className="font-heading text-2xl font-bold text-foreground mb-6">My Orders</h1>
 
       <div className="space-y-4">

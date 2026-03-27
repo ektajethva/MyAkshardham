@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Flame, ShoppingCart } from "lucide-react";
 import { Button } from "../components/ui/button";
@@ -26,61 +26,8 @@ export default function Navbar() {
   const location = useLocation();
   const { totalItems } = useCart();
 
-// useEffect(() => {
-//   const params = new URLSearchParams(window.location.search);
+  const dropdownRef = useRef(null)
 
-//   const user_id = params.get("id");
-//   const token = params.get("token");
-//   const name = params.get("name");
-//   const email = params.get("email");
-
-//   // Google login via backend redirect
-//   if (token) {
-
-//     const userData = { user_id:user_id , name, email, role:"user" };
-
-//     localStorage.setItem("token", token);
-//     localStorage.setItem("user", JSON.stringify(userData));
-
-//     setUser(userData);
-
-//     window.history.replaceState({}, document.title, "/");
-
-//   } else {
-
-//     const storedUser = localStorage.getItem("user");
-
-//     if (storedUser) {
-//       setUser(JSON.parse(storedUser));
-//     }
-
-//     // 👇 detect Supabase Google login
-//   supabase.auth.onAuthStateChange(async (event, session) => {
-//   if (session?.user) {
-//     const user = session.user;
-
-//     const userData = {
-//       user_id: user.id,
-//       name: user.user_metadata.full_name,
-//       email: user.email,
-//       role: "user"
-//     };
-
-//     localStorage.setItem("user", JSON.stringify(userData));
-//     setUser(userData);
-
-//     await axios.post("http://localhost:5000/auth/save-user", {
-//       user_id: user.id,
-//       name: user.user_metadata.full_name,
-//       email: user.email
-//     });
-//   }
-// });
-
-//     // checkGoogleUser();
-//   }
-
-// }, []);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -126,6 +73,51 @@ export default function Navbar() {
 
   return () => {
     listener.subscription.unsubscribe();
+  };
+}, []);
+
+ 
+
+  useEffect(() => {
+  const fetchUserImage = async () => {
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser) return;
+
+    const userData = JSON.parse(storedUser);
+
+    try {
+      // Fetch full user info (including image) from your API
+      const res = await axios.get(`http://localhost:5000/auth/getUser/${userData.user_id}`);
+
+      setUser({ ...userData, image: res.data.image });
+    } catch (err) {
+      console.error("Failed to fetch user image:", err);
+      setUser(userData); // fallback to existing data
+    }
+  };
+
+  // Listen to login/logout events
+  window.addEventListener("userChanged", fetchUserImage);
+
+  // Initial load
+  fetchUserImage();
+
+  return () => {
+    window.removeEventListener("userChanged", fetchUserImage);
+  };
+}, []);
+
+  useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setDropdownmenu(false);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
   };
 }, []);
 
@@ -194,18 +186,41 @@ export default function Navbar() {
       onClick={() => setDropdownmenu(!dropdownmenu)}
       className="h-9 w-9 rounded-full bg-primary text-white flex items-center justify-center font-semibold cursor-pointer hover:shadow-md transition"
     >
-      {user.name?.charAt(0).toUpperCase()}
+      {/* {user.name?.charAt(0).toUpperCase()} */}
+
+      {user?.image ? (
+    <img
+      src={user.image}
+      alt="profile"
+      className="h-full w-full object-cover rounded-full"
+    />
+  ) : (
+    <div className="h-full w-full bg-primary text-white flex items-center justify-center font-semibold rounded-full">
+      {user?.name?.charAt(0).toUpperCase()}
+    </div>
+  )}
     </div>
 
     {/* Dropdown */}
     {dropdownmenu && (
-      <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-xl border border-gray-200">
+      <div ref={dropdownRef} className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-xl border border-gray-200">
 
         {/* Profile Section */}
         <div className="flex flex-col items-center p-6 border-b">
 
           <div className="h-16 w-16 rounded-full bg-primary text-white flex items-center justify-center text-xl font-bold mb-2">
-            {user.name?.charAt(0).toUpperCase()}
+            {/* {user.name?.charAt(0).toUpperCase()} */}
+             {user?.image ? (
+    <img
+      src={user.image}
+      alt="profile"
+      className="h-full w-full object-cover rounded-full"
+    />
+  ) : (
+    <div className="h-full w-full bg-primary text-white flex items-center justify-center font-semibold rounded-full">
+      {user?.name?.charAt(0).toUpperCase()}
+    </div>
+  )}
           </div>
 
           <p className="text-sm font-semibold text-gray-900">

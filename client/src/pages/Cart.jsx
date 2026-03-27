@@ -3,10 +3,11 @@ import { Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "sonner";
 
 export default function CartPage() {
   const navigate = useNavigate()
-  const { items, removeFromCart, updateQty, totalPrice } = useCart();
+  const { items, removeFromCart, updateQty, totalPrice , clearCart} = useCart();
 
   const handleCheckout = () => {
 
@@ -57,7 +58,23 @@ export default function CartPage() {
             itemsPayload
           );
 
-          // ✅ Step 3: Save receipt (optional)
+          // ✅ Step 3: save Orders
+
+          const ordersPayload = items.map((item) => ({
+            product_id: item.id,
+            customer_name: user.name,
+            product_name: item.name,
+            total: item.price * item.qty,
+            date: new Date().toISOString(),
+            user_id: user.user_id
+          }));
+
+          await axios.post(
+            "http://localhost:5000/payment/Orders",
+            { orders: ordersPayload }
+          );
+
+          // ✅ Step 4: Save receipt (optional)
           const receiptData = {
             paymentId: response.razorpay_payment_id,
             name: user.name,
@@ -69,11 +86,13 @@ export default function CartPage() {
 
           localStorage.setItem("receipt", JSON.stringify(receiptData));
 
+          clearCart();
+          
           navigate("/receipt");
 
         } catch (error) {
           console.log("Payment save error:", error);
-          alert("Payment done but failed to store order");
+          toast.error("Payment done but failed to store order");
         }
     },
 
